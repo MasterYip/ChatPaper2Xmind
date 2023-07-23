@@ -49,3 +49,13 @@ python paper2xmind.py
 以及其他不小心被忽略的项目 :)
 
 特别感谢开源社区和所有为该项目作出贡献的贡献者。
+
+## 许可证
+本项目在MIT许可下发布。有关详细信息，请参阅[LICENSE](LICENSE)文件。
+
+## 作者
+Master Yip
+
+电子邮件：2205929492@qq.com
+
+GitHub：[Master Yip](https://github.com/MasterYip)

@@ -49,3 +49,13 @@ I would like to acknowledge the following projects for their valuable contributi
 And other projects that are carelessly ignored:)
 
 Special thanks to the open-source community and all the contributors who helped make this project possible.
+
+## License
+This project is licensed under the terms of the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Author
+Master Yip
+
+Email: 2205929492@qq.com
+
+GitHub: [Master Yip](https://github.com/MasterYip)
