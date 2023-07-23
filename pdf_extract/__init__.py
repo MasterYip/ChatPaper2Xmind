@@ -5,7 +5,7 @@ import time
 import fitz
 import os
 import tempfile
-from matplotlib.pyplot import plot, scatter
+# from matplotlib.pyplot import plot
 import numpy as np
 TEMP_DIR = tempfile.mkdtemp()
 

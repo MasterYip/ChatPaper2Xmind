@@ -1,5 +1,5 @@
 [[source]]
-url = "https://pypi.org/simple"
+url = "https://pypi.mirrors.ustc.edu.cn/simple"
 verify_ssl = true
 name = "pypi"
 
@@ -7,6 +7,8 @@ name = "pypi"
 numpy = "*"
 pymupdf = "*"
 opencv-python = "*"
+tqdm = "*"
+openai = "*"
 
 [dev-packages]
 
