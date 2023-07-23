@@ -7,12 +7,18 @@ ChatPaper2XMind论文XMind笔记生成工具：使用ChatGPT将PDF转换为带�
 
 # 功能展示
 ![文档转换](doc/feature-Paper2Xmind.png)
+
 # 安装与使用
-环境设置
+1. 环境设置
 ```
 pip install -r requirements.txt
-git submodule update --remote --recursive
+git submodule update --init --recursive
 ```
+2. OpenAI APIKEY 设置
+在`config.py`中加入APIKEYs(支持多线程请求)
+
+3. 开箱使用
+
 将PDF论文转换为XMind
 ```
 cd <root-dir>
@@ -30,6 +36,7 @@ python paper2xmind.py
 - 改进图像定位方法（由于部分匹配失败导致的图像丢失）
 - 添加Markdown笔记生成功能
 - 优化公式检测（边界检测）
+- 解决OpenAI代理问题
 
 # 鸣谢
 

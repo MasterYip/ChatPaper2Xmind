@@ -1,4 +1,4 @@
 [submodule "XmindCopilot"]
 	path = XmindCopilot
-	url = git@github.com:MasterYip/XmindCopilot.git
+	url = https://github.com/MasterYip/XmindCopilot.git
 	branch = copilot_apps
