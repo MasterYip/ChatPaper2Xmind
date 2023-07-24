@@ -9,6 +9,7 @@ from config import *
 # import tenacity
 # import tiktoken
 
+
 class GPTRequest(object):
     # TODO: other model support?
     def __init__(self, content, model=MODEL, language=LANGUAGE, keyword=KEYWORD):
@@ -128,7 +129,10 @@ class GPTRequest(object):
                     )
                 except Exception as e:
                     print(e)
-                    time.sleep(errsleep)
+                    try:
+                        time.sleep(errsleep)
+                    except KeyboardInterrupt:
+                        exit()
                 except KeyboardInterrupt:
                     exit()
             # Output to self.ret
@@ -173,7 +177,8 @@ class GPTThread(object):
 
 
 class GPTInterface(object):
-    def __init__(self, apikeys=APIKEYS, model=MODEL, keyword=KEYWORD, gpt_enable=GPT_ENABLE) -> None:
+    def __init__(self, apikeys=APIKEYS, model=MODEL, keyword=KEYWORD, gpt_enable=GPT_ENABLE, openai_proxy=PROXY) -> None:
+        openai.proxy = openai_proxy
         self.apikeys = apikeys
         self.model = model
         self.keyword = keyword
@@ -181,96 +186,21 @@ class GPTInterface(object):
         self.request_list = []
         self.thread_list = [GPTThread(apikey) for apikey in self.apikeys]
         self.request_index = {}
-
-    # Legacy
-    def content2list(self, content, write=False, name="DEFAULT", max_num=4, err_sleep=25):
-        """
-        Convert content to list
-        """
-        # 调用接口
-        if self.gpt_enable:
-            completions = None
-            if self.model == "gpt-3.5-turbo":
-                while not completions:
-                    try:
-                        completions = openai.ChatCompletion.create(
-                            model="gpt-3.5-turbo",
-                            messages=[
-                                {"role": "system",
-                                "content": "You are a researcher in the field of [" + self.keyword + "] who is good at summarizing papers using concise statements"},
-                                {"role": "assistant",
-                                "content": f"Sumarize and simplify in list up to {max_num} items. Every item are splited by '\n'. Children item has one more '\t' prefix then their father item."},
-                                {"role": "user", "content": "Please summarize it:" + content}
-                            ]
-                        )
-                    except KeyboardInterrupt:
-                        exit()
-                    except Exception as e:
-                        print(e)
-                        time.sleep(err_sleep)
-                        
-
-                # 输出结果
-                message = completions['choices'][0]['message']['content']
-            elif self.model == "text-davinci-003":
-                prompt = f"Sumarize and simplify in list up to {max_num} items. Every item are splited by '\n'." + content
-                
-                while not completions:
-                    try:
-                        # 调用接口
-                        completions = openai.Completion.create(
-                            engine="text-davinci-003",
-                            prompt=prompt,
-                            max_tokens=1024,
-                            n=1,
-                            stop=None,
-                            temperature=0.5,
-                        )
-                    except Exception as e:
-                        print(e)
-                        time.sleep(err_sleep)
-                # 输出结果
-                message = completions.choices[0].text
-                
-            message = re.sub('- ', '', message)
-            
-        else:  # Fake GPT to save time for testing
-            message = re.sub('\.', '.\n', content)
-        if write:
-            self.list_dict[name] = message.split("\n")
-        return message.split("\n")
-    # Legacy
-    def content2list_multitask(self, list_dict, section_text_dict, section_names, thread_num=1):
-        
-        self.section_names = section_names
-        self.list_dict = list_dict
-        self.section_text_dict = section_text_dict
-        for name in self.section_names[:-1]:
-            self.thread_ls.append(Thread(target=self.content2list, args=(
-                self.section_text_dict[name], True, name)))
-
-        ptr = trange(len(self.thread_ls))
-        ptr.desc = self.section_names[ptr.n][0:15]
-        ptr.update(0)
-        self.ptr = ptr
-        while True:
-            if self.get_alive_thread_num() < thread_num and ptr.n < len(self.thread_ls):
-                self.thread_ls[ptr.n].start()
-                ptr.desc = self.section_names[ptr.n][0:15]
-                ptr.update()
-            if not any([thread.is_alive() for thread in self.thread_ls]) and ptr.n >= len(self.thread_ls):
-                break
     
     def gptMultitask(self, interval=0):
         ptr = 0
         progress = trange(len(self.request_list))
-        while self.checkSuccessNum() < len(self.request_list):
-            for thread in self.thread_list:
-                if thread.isAvailable() and ptr < len(self.request_list):
-                    thread.run(self.request_list[ptr])
-                    ptr += 1
-            progress.update(self.checkSuccessNum() - progress.n)
-            time.sleep(interval)
+        try:
+            while self.checkSuccessNum() < len(self.request_list):
+                for thread in self.thread_list:
+                    if thread.isAvailable() and ptr < len(self.request_list):
+                        thread.run(self.request_list[ptr])
+                        ptr += 1
+                progress.update(self.checkSuccessNum() - progress.n)
+                time.sleep(interval)
+        except KeyboardInterrupt:
+            progress.close()
+            exit()
     
     def checkSuccessNum(self):
         return [req.isSuccess() for req in self.request_list].count(True)
@@ -282,11 +212,4 @@ class GPTInterface(object):
             
     def getResponse(self, index):
         return self.request_index[index].ret
-
-    # Legacy
-    def get_alive_thread_num(self):
-        return sum([thread.is_alive() for thread in self.thread_ls])
-    
-
-
 
