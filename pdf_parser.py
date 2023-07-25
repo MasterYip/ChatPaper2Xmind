@@ -130,6 +130,9 @@ class PDFPaperParser:
                     break
             if ref_break_flag:
                 break
+        section_title = [(re.search(ABS_MATCHSTR, self.all_text).group(), 1)]\
+            + section_title\
+            + [(re.search(REF_MATCHSTR, self.all_text).group(), 1)]
         return section_title if withlevel else [t[0] for t in section_title]
 
     def get_section_textdict(self):
@@ -138,7 +141,7 @@ class PDFPaperParser:
         :return: Dict of section titles with text content
         FIXME: This will not get Reference content
         """
-        section_title = self.get_section_titles()
+        section_title = self.get_section_titles(withlevel=False)
         section_dict = {}
         for i in range(0, len(section_title)-1):
             title = section_title[i]

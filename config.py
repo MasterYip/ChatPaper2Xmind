@@ -28,8 +28,7 @@ ABS_MATCHSTR = "ABSTRACT|Abstract"
 REF_MATCHSTR = "Reference|REFERENCE|Bibliography"
 APD_MATCHSTR = "APPENDIX|Appendix"
 SECTIONNUM_MATCHSTR = [  # Level 1
-                        [ABS_MATCHSTR, REF_MATCHSTR, APD_MATCHSTR,
-                         "I\.", "II\.", "III\.", "IV\.", "V\.", "VI\.", "VII\.", "VIII\.", "IIX\.", "IX\.", "X\.",
+                        ["I\.", "II\.", "III\.", "IV\.", "V\.", "VI\.", "VII\.", "VIII\.", "IIX\.", "IX\.", "X\.",
                          "[1-9]\."],
                          # Level 2
                         ["A\.", "B\.", "C\.", "D\.", "E\.", "F\.", "G\.", "H\.", "I\.", "J\.",

@@ -29,7 +29,7 @@ class Xmindtree(TopicElement):
         ptr = self
         section_list = self.paper.get_section_titles(withlevel=True)
         for title in section_list:
-            if title[1] == 2:
+            if title[1] == 1:
                 ptr = self.addSubTopicbyTitle(title[0])
             else:
                 ptr.addSubTopicbyTitle(title[0])
