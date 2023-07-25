@@ -7,6 +7,7 @@ import os
 import tempfile
 # from matplotlib.pyplot import plot
 import numpy as np
+from config import *
 TEMP_DIR = tempfile.mkdtemp()
 
 # debugging
@@ -201,7 +202,7 @@ def get_possible_eqspan(page, draw=False):
                     possible_bbox.append(span['bbox'])
 
                 # Numbering
-                if re.match('[\s]{0,}\([\d]{1,}[a-zA-Z]{0,1}\)', span['text']):
+                if re.match(EQUATION_MATCHSTR, span['text']):
                     if draw:
                         page.draw_rect(
                             span['bbox'], color=(0, 0, 1), width=0.4)
@@ -400,7 +401,7 @@ def getEqBoxList(page, numbox_margin=15):
                 elif span['font'].startswith('CM') or span['font'].startswith('MSBM'):
                     eqbox.append(span['bbox'])
                 # Numbering span
-                elif re.match('[\s]{0,}\([\d]{1,}[a-zA-Z]{0,1}\)', span['text']):
+                elif re.match(EQUATION_MATCHSTR, span['text']):
                     box = span['bbox']
                     box = (box[0]-numbox_margin, box[1]-numbox_margin,
                         box[2]+numbox_margin, box[3]+numbox_margin)
@@ -497,7 +498,7 @@ def getFigBoxList(page):
     # Numbering block
     blocks = page.get_text("dict", flags=0)["blocks"]
     for block in blocks:
-        if re.match('[\s]{0,}Fig.[\s]{1,3}[\d]{1,2}', block['lines'][0]['spans'][0]['text']):
+        if re.match(IMG_MATCHSTR, block['lines'][0]['spans'][0]['text']):
             numbox.append(block['bbox'])
         else:# Irrelevant block
             irrbox.append(block['bbox'])

@@ -60,6 +60,7 @@ python paper2xmind.py
 - Improve image positioning methods (to address image loss due to partial matching failures).
 - Add functionality for generating Markdown notes.
 - Optimize formula detection (boundary detection).
+- Table Detection
 
 ## Acknowledgements
 

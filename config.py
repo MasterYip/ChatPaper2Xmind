@@ -24,15 +24,18 @@ else:    # Use fake GPT model
 
 """PDF Parser"""
 # Regex match string for section title
-ABS_MATCHSTR = "ABSTRACT|Abstract"
+ABS_MATCHSTR = "ABSTRACT|Abstract|abstract"
 REF_MATCHSTR = "Reference|REFERENCE|Bibliography"
-APD_MATCHSTR = "APPENDIX|Appendix"
+APD_MATCHSTR = "APPENDIX|Appendix"  # Not used for now
 SECTIONNUM_MATCHSTR = [  # Level 1
                         ["I\.", "II\.", "III\.", "IV\.", "V\.", "VI\.", "VII\.", "VIII\.", "IIX\.", "IX\.", "X\.",
                          "[1-9]\."],
                          # Level 2
                         ["A\.", "B\.", "C\.", "D\.", "E\.", "F\.", "G\.", "H\.", "I\.", "J\.",
                          "[1-9]\.[1-9]\."]]
+EQUATION_MATCHSTR = '[\s]{0,}\([\d]{1,}[a-zA-Z]{0,1}\)'
+IMG_MATCHSTR = 'Fig.[\s]{1,3}[\d]{1,2}|Figure[\s]{1,3}[\d]{1,2}|Tab.[\s]{1,3}[\d]{1,2}|Table[\s]{1,3}[\d]{1,2}' # Figure & Table
+
 
 """Xmind Sytle Template"""
 TEMPLATE_XMIND_PATH = 'template.xmind'

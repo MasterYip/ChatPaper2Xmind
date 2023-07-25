@@ -83,7 +83,7 @@ class Xmindtree(TopicElement):
 
     def gen_image(self):
         """
-        Generate image for each section in xmind
+        Generate image for each section in xmind (Figure/Table)
         """
         section_names = self.paper.get_section_titles()
         img_dict = self.paper.get_section_imagedict()
