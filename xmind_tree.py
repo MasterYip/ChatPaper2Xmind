@@ -8,14 +8,6 @@ import re
 
 
 class Xmindtree(TopicElement):
-    # NOTE: 'I\.' is repeative, which should be taken care of
-    section_numbering = [["I\.", "II\.", "III\.", "IV\.", "V\.", "VI\.", "VII\.", "VIII\.", "IIX\.", "IX\.", "X\."],
-                         ["A\.", "B\.", "C\.", "D\.", "E\.", "F\.", "G\.", "H\.", "I\.", "J\."]]
-    abstrct_matchstr = '([Aa][Bb][Ss][Tt][Rr][Aa][Cc][Tt])'
-    intro_matchstr = '([Ii][Nn][Tt][Rr][Oo][Dd][Uu][Cc][Tt][Ii][Oo][Nn])'
-    ref_matchstr = '(Reference|REFERENCE|Bibliography)'
-    # Min Length Filter
-    # minlength = 10
 
     def __init__(self, stem_node, paper, title='') -> None:
         # Set root node to itself
@@ -23,7 +15,6 @@ class Xmindtree(TopicElement):
 
         if title:
             self.setTitle(title)
-        # self.abstract_node = self.addSubTopicbyTitle("Abstract")
         self.paper = paper
         self.gpt = GPTInterface()
 
@@ -36,13 +27,12 @@ class Xmindtree(TopicElement):
     def gen_table_of_content(self):
         # Note: only support sections named with specified numbering
         ptr = self
-        section_list = self.paper.get_section_titles()
+        section_list = self.paper.get_section_titles(withlevel=True)
         for title in section_list:
-            if re.match("|".join(self.section_numbering[0] +
-                                 [self.abstrct_matchstr, self.ref_matchstr]), title):
-                ptr = self.addSubTopicbyTitle(title)
+            if title[1] == 2:
+                ptr = self.addSubTopicbyTitle(title[0])
             else:
-                ptr.addSubTopicbyTitle(title)
+                ptr.addSubTopicbyTitle(title[0])
 
     def gen_textbrief(self):
         """

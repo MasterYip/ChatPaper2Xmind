@@ -1,17 +1,12 @@
 import re
 import fitz
 from pdf_extract import get_eqbox, getEqRect, get_box_textpos, getFigRect
+from config import *
 # import arxiv
 
 
 class PDFPaperParser:
-    # For easier section title extraction
-    section_numbering = [["I\.", "II\.", "III\.", "IV\.", "V\.", "VI\.", "VII\.", "VIII\.", "IIX\.", "IX\.", "X\."],
-                        ["A\.", "B\.", "C\.", "D\.", "E\.", "F\.", "G\.", "H\.", "I\.", "J\."]]
-    abstrct_matchstr = '([Aa][Bb][Ss][Tt][Rr][Aa][Cc][Tt])'
-    intro_matchstr = '([Ii][Nn][Tt][Rr][Oo][Dd][Uu][Cc][Tt][Ii][Oo][Nn])'
-    ref_matchstr = '(Reference|REFERENCE|Bibliography)'
-    
+
     def __init__(self, path, title='', url='', authors=[]):
         # Args
         self.path = path
@@ -97,7 +92,8 @@ class PDFPaperParser:
                 return item[1]
 
     # Section Dict Extract
-    def get_section_titles(self):
+    # Deprecated
+    def get_section_titles_legacy(self):
         text = self.all_text
         match_str = '\n('+'|'.join(
             self.section_numbering[0]+self.section_numbering[1])+')(\s.*)'
@@ -111,6 +107,30 @@ class PDFPaperParser:
             + [ref_match.group()]
         # TODO: ref?
         return section_title
+
+    def get_section_titles(self, withlevel=False):
+        section_title = []
+        ref_break_flag = False
+        level1_matchstr = '('+'|'.join(SECTIONNUM_MATCHSTR[0])+')(\s.*)'
+        level2_matchstr = '('+'|'.join(SECTIONNUM_MATCHSTR[1])+')(\s.*)'
+        for page in self.pdf:
+            blocks = page.get_text("dict", flags=0)["blocks"]
+            for block in blocks:
+                lines = block["lines"]
+                for line in lines:
+                    line_text = "".join([span["text"] for span in line["spans"]])
+                    if re.match(level2_matchstr, line_text) and len(section_title)>0:
+                        section_title.append((line_text, 2))
+                    elif re.match(level1_matchstr, line_text):
+                        section_title.append((line_text, 1))
+                    if re.match(REF_MATCHSTR, line_text):
+                        ref_break_flag = True
+                        break
+                if ref_break_flag:
+                    break
+            if ref_break_flag:
+                break
+        return section_title if withlevel else [t[0] for t in section_title]
 
     def get_section_textdict(self):
         """

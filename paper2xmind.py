@@ -4,8 +4,7 @@ from XmindCopilot import xmind, fileshrink
 from pdf_parser import PDFPaperParser
 from pdf_extract import *
 from xmind_tree import Xmindtree
-
-TEMPLATE_XMIND_PATH = 'template.xmind'
+from config import *
 
 
 def pdf_processing(pdf_file_path, xmind_file_path):

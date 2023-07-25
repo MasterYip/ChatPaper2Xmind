@@ -5,6 +5,8 @@
 
 ChatPaper2XMind论文XMind笔记生成工具：使用ChatGPT将PDF转换为带有图片和公式的简洁XMind笔记，提高阅读效率。
 
+**注意：受限于ChatGPT生成模型准确性，生成的Xmind笔记更适合作为笔记草稿，在此基础上制作阅读笔记，而不能直接将其当做论文阅读。**
+
 ## 功能展示
 ![文档转换](doc/feature-Paper2Xmind.png)
 
@@ -24,20 +26,19 @@ git submodule update --init --recursive
 - 语言设置：在`config.py`中设置LANGUAGE变量以选择模型的语言，默认为英语，但部分支持中文。
 - 领域关键词：在`config.py`中设置KEYWORD变量以指定模型关注的领域关键词。
 - 代理设置：在`config.py`中设置PROXY变量以指定代理地址，**如果您的系统已经设置了全局代理，可以保留为None**。
-
-多线程
-
 - 线程请求速率限制：在`config.py`中设置THREAD_RATE_LIMIT变量以指定每个APIKEY在一分钟内可以发送的请求次数，由于OpenAI的限制，每个APIKEY最多支持3次请求。
 
 生成设置
 
 - 最大生成项数：在`config.py`中设置TEXT2LIST_MAX_NUM和TEXT2TREE_MAX_NUM变量，分别表示文本转列表和文本转树结构的最大生成项数。
-
-启用真实GPT
-
 - 使用真实GPT模型：在`config.py`中设置GPT_ENABLE变量以使用真实GPT/伪GPT
 - 伪GPT模型响应：在`config.py`中设置FAKE_GPT_RESPONSE变量以指定伪GPT模型的响应内容。
 
+标题正则匹配
+- 标题正则匹配字符串：在`config.py`中设置SECTIONNUM_MATCHSTR进行对应标题匹配
+
+文件保存
+- Xmind风格模板文件：在`config.py`中设置TEMPLATE_XMIND_PATH选择风格模板（模板应为空）
 
 ### 3. 开箱使用
 
