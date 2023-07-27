@@ -1,10 +1,5 @@
 import os
-import sys
 import argparse
-
-if 'E:\\CodeTestFile\\comprehensive-coding' not in sys.path:
-    sys.path.append('E:\\CodeTestFile\\comprehensive-coding')
-
 from XmindCopilot import xmind, fileshrink
 from pdf_parser import PDFPaperParser
 from pdf_extract import *

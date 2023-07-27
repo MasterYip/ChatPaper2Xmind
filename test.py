@@ -1,10 +1,5 @@
-import sys
 import os
-
-if 'E:\\CodeTestFile\\comprehensive-coding' not in sys.path:
-    sys.path.append('E:\\CodeTestFile\\comprehensive-coding')
-
-from XmindCopilot import xmind
+from XmindCopilot import xmind, search
 from pdf_parser import PDFPaperParser
 from pdf_extract import *
 from xmind_tree import Xmindtree
@@ -23,6 +18,7 @@ def pdf2xmind():
     tree.gen_summary()
     tree.save_xmind()
 
+
 def xmindTest():
     workbook = xmind.load("E:\\Temp\\Fahmi.xmind")
     sheet = workbook.getPrimarySheet()
@@ -31,6 +27,7 @@ def xmindTest():
     print(workbook.reference_dir)
     print(topic.getImageAttr())
     xmind.save(workbook)
+
 
 def pdfTest():
     file_dir = "E:\\SFTRDatapool2\\人工智能核心550篇论文汇总\\1.自然语言处理\\1.语言建模\\1.Semi-supervised Sequence Learning\\1511.01432v1.pdf"
@@ -47,6 +44,7 @@ def pdfTest():
     # for rect in rects:
     #     print(rect)
     paper.pdf.save(os.path.splitext(file_dir)[0]+"_processed.pdf")
+
 
 if __name__ == "__main__":
     # pdfTest()

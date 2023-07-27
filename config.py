@@ -1,5 +1,6 @@
 """OpenAI API"""
-APIKEYS = [""]                  # Your OpenAI API keys
+from private_config import PRIVATE_KEY
+APIKEYS = [PRIVATE_KEY]         # Your OpenAI API keys
 MODEL = "gpt-3.5-turbo"         # GPT model name
 LANGUAGE = "English"            # Only partially support Chinese
 KEYWORD = "Science&Engineering" # Keyword for GPT model (What field you want the model to focus on)
