@@ -35,7 +35,7 @@ SECTIONNUM_MATCHSTR = [  # Level 1
                          "[1-9]\.[1-9]\."]]
 EQUATION_MATCHSTR = '[\s]{0,}\([\d]{1,}[a-zA-Z]{0,1}\)'
 IMG_MATCHSTR = 'Fig.[\s]{1,3}[\d]{1,2}|Figure[\s]{1,3}[\d]{1,2}|Tab.[\s]{1,3}[\d]{1,2}|Table[\s]{1,3}[\d]{1,2}' # Figure & Table
-
+DEBUG_MODE = False
 
 """Xmind Sytle Template"""
 TEMPLATE_XMIND_PATH = 'template.xmind'

@@ -2,6 +2,7 @@ import re
 import fitz
 from pdf_extract import get_eqbox, getEqRect, get_box_textpos, getFigRect
 from config import *
+import os
 # import arxiv
 
 
@@ -15,7 +16,7 @@ class PDFPaperParser:
         
         # PDF parse
         self.pdf = fitz.open(self.path)
-        self.title = title if title != '' else self.get_title()
+        self.title = self.get_title() if (title == '' and self.get_title()) else title
         self.all_text = chr(12).join([page.get_text() for page in self.pdf])
         self.section_textdict = self.get_section_textdict()
         self.abstract = self.get_abstract()
@@ -26,6 +27,13 @@ class PDFPaperParser:
 
     def __del__(self):
         self.pdf.close()
+
+    def save_pdf(self, path=None, debug=True):
+        """For debug use"""
+        path = path if path else self.path
+        if debug:
+            path = os.path.splitext(path)[0]+"_debug.pdf"
+        self.pdf.save(path)
 
     def get_title(self):
         doc = self.pdf  # 打开pdf文件
@@ -90,6 +98,7 @@ class PDFPaperParser:
         for item in self.get_section_textdict().items():
             if 'introduction' in item[0].lower():
                 return item[1]
+        return ''
 
     # Section Dict Extract
     # Deprecated

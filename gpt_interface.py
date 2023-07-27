@@ -56,10 +56,21 @@ class GPTRequest(object):
         """
         self.message = [
             {"role": "system",
-            "content": "You are a researcher in the field of [" + self.keyword + "] who is good at summarizing papers using concise statements"},
+                "content": "You are a researcher in the field of [" + self.keyword + "] who is good at summarizing papers using concise statements"},
             {"role": "assistant",
-            "content": f"Sumarize and simplify in list up to {maxnum} items. Every item are splited by '\n'. Children item has one more '\t' prefix then their father item."},
-            {"role": "user", "content": "Please summarize it:" + self.content}
+                "content": f"""
+                    Your mission is to summarize paragraphs.
+                    Requirements:
+                    1. Summarize given content in multi-level list.
+                    2. Each item in the list must not contain more than 20 words.
+                    3. Total number of items in the list must not exceed {maxnum}.
+                    4. Items are separated by '\n'
+                    5. Items are indented by '\t'
+                    6. Child item has one more indentation than its father.
+                    7. No prefix(1. 1.1 - or other prefix) is permitted in each item except '\t'.
+                    8. Sumarize in {LANGUAGE}.
+                """},
+            {"role": "user", "content": "Content:" + self.content}
         ]
         self.postprocess = self.para2tree_postprocess
         return self

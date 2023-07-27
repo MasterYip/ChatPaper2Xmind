@@ -1,11 +1,16 @@
 import os
+import sys
 import argparse
+
+if 'E:\\CodeTestFile\\comprehensive-coding' not in sys.path:
+    sys.path.append('E:\\CodeTestFile\\comprehensive-coding')
+
 from XmindCopilot import xmind, fileshrink
 from pdf_parser import PDFPaperParser
 from pdf_extract import *
 from xmind_tree import Xmindtree
 from config import *
-
+from glob import glob
 
 def pdf_processing(pdf_file_path, xmind_file_path):
     paper = PDFPaperParser(pdf_file_path)
@@ -19,13 +24,15 @@ def pdf_processing(pdf_file_path, xmind_file_path):
     tree = Xmindtree(paper_topic, paper, paper.title[:15])
     tree.gen_summary()
     tree.save_xmind(xmind_file_path)
+    if DEBUG_MODE:
+        paper.save_pdf(debug=True)
 
 
 def pdf_batch_processing(path):
     if os.path.isdir(path):
         xmind_path = os.path.join(path, "summary.xmind")
-        for pdf_path in os.listdir(path):
-            if pdf_path.endswith('.pdf') and not pdf_path.endswith('_processed.pdf'):
+        for pdf_path in glob(os.path.join(path, '**/*.pdf'), recursive=True):
+            if pdf_path.endswith('.pdf') and not pdf_path.endswith('_debug.pdf'):
                 print("\033[92m" + pdf_path)
                 pdf_processing(os.path.join(path, pdf_path), xmind_path)
         print("\033[95mXmind size shrinking...")
@@ -46,3 +53,4 @@ if __name__ == "__main__":
     argparser.add_argument("--path", type=str, default=r'./PDFexample',
                            help="Pdf file or a folder containing pdf files.")
     pdf_batch_processing(argparser.parse_args().path)
+    

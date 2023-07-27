@@ -5,7 +5,6 @@ import time
 import fitz
 import os
 import tempfile
-# from matplotlib.pyplot import plot
 import numpy as np
 from config import *
 TEMP_DIR = tempfile.mkdtemp()
@@ -374,13 +373,14 @@ def getDensityMap(BoxWeightList, roi: tuple[4],
         return box
     for box, weight in BoxWeightList:
         box = regulateBox(box)
-        if box_center(box)[dir2] < roi[up2] and box_center(box)[dir2] > roi[low2]:
+        # if box_center(box)[dir2] < roi[up2] and box_center(box)[dir2] > roi[low2]:
+        if (box[up2] < roi[up2] and box[up2] > roi[low2]) or (box[low2] < roi[up2] and box[low2] > roi[low2]):
             density[int(box[low]):int(box[up])] += weight
     return (np.array(range(len(density)))/resolution*(roi[up]-roi[low]), sliding_average(density, slideavg_windowsize))
 
 
 # Equation Box Detection
-def getEqBoxList(page, numbox_margin=15):
+def getEqBoxList(page, numbox_margin=5):
     """
     Get the (equation box, numbering box, irregular box) of the page
     
@@ -411,7 +411,7 @@ def getEqBoxList(page, numbox_margin=15):
     return (eqbox, numbox, irrbox)
 
 
-def getEqBoxWeight(boxLists, weights=[1, 30, -15]):
+def getEqBoxWeight(boxLists, weights=[1, 1000, -10]):
     """
     Get the box & weight of possible equation span
     
@@ -500,6 +500,8 @@ def getFigBoxList(page):
     for block in blocks:
         if re.match(IMG_MATCHSTR, block['lines'][0]['spans'][0]['text']):
             numbox.append(block['bbox'])
+            if DEBUG_MODE:
+                page.draw_rect(block['bbox'], color=(1, 0, 0), width=1)
         else:# Irrelevant block
             irrbox.append(block['bbox'])
     return (pathbox, imgbox, numbox, irrbox)
@@ -593,7 +595,7 @@ def getFigureRectFromMap(denMap, numBoxList, columnROI, c_bias=3, dir=1, dirmarg
     return FigRects
 
 
-def getFigRect(page, drawDen=False):
+def getFigRect(page, drawDen=DEBUG_MODE):
     """ Get the figure rect of the page"""
     FigRects = []
     boxLists = getFigBoxList(page)
@@ -602,7 +604,12 @@ def getFigRect(page, drawDen=False):
     for col in column_rects:
         map = getDensityMap(FigBoxWeight, col, slideavg_windowsize=5)
         if drawDen:
-            plot(map[0], map[1])
+            amp = 40
+            maxden = max(map[1]) if max(map[1]) > 0 else 1
+            for i in range(len(map[0])-1):
+                page.draw_line([col[0]-amp*map[1][i]/maxden, map[0][i]],
+                               [col[0]-amp*map[1][i+1]/maxden, map[0][i+1]],
+                               color=(0, 1, 0), width=0.5)
         # FigRects += getFigureRectFromMap(map, col)
         FigRects += getFigureRectFromMap(map, boxLists[2], col)
         
@@ -621,5 +628,8 @@ def getFigRect(page, drawDen=False):
     x_ls = map1[0]
     den = [get2ColunmDensity(map1[1][i], map2[1][i]) for i in range(len(map1[1]))]
     FigRects += getFigureRectFromMap((x_ls, den), boxLists[2], totalROI)
-    return combineRect(combineRect(FigRects, critic_dis=20, dir=1), critic_dis=0, critic_alignerr=20, dir=0)
-    # return FigRects
+    combine_rect = combineRect(combineRect(FigRects, critic_dis=20, dir=1), critic_dis=0, critic_alignerr=20, dir=0)
+    if DEBUG_MODE:
+        for rect in combine_rect:
+            page.draw_rect(rect, color=(0, 1, 0), width=2)
+    return combine_rect
