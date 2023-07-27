@@ -34,7 +34,7 @@ def pdf_batch_processing(path):
         for pdf_path in glob(os.path.join(path, '**/*.pdf'), recursive=True):
             if pdf_path.endswith('.pdf') and not pdf_path.endswith('_debug.pdf'):
                 print("\033[92m" + pdf_path)
-                pdf_processing(os.path.join(path, pdf_path), xmind_path)
+                pdf_processing(pdf_path, xmind_path)
         print("\033[95mXmind size shrinking...")
         fileshrink.xmind_shrink(xmind_path)
     elif os.path.isfile(path) and path.endswith('.pdf'):
