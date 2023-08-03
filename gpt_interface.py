@@ -16,7 +16,7 @@ class GPTRequest(object):
         """
         Initialize GPTRequest.\\
         Note that request message has not been generated yet.
-        
+
         :param content: text content
         :param model: OpenAI model name
         :param language: language
@@ -30,7 +30,7 @@ class GPTRequest(object):
         self.success = False
         # TODO: Nontype problem?
         self.postprocess = None
-    
+
     # Messages Generation
     def para2list(self, maxnum=TEXT2LIST_MAX_NUM):
         """
@@ -40,14 +40,14 @@ class GPTRequest(object):
         """
         self.message = [
             {"role": "system",
-            "content": "You are a researcher in the field of [" + self.keyword + "] who is good at summarizing papers using concise statements"},
+             "content": "You are a researcher in the field of [" + self.keyword + "] who is good at summarizing papers using concise statements"},
             {"role": "assistant",
-            "content": f"Sumarize and simplify in list up to {maxnum} items. Every item are splited by '\n'"},
+             "content": f"Sumarize and simplify in list up to {maxnum} items. Every item are splited by '\n'"},
             {"role": "user", "content": "Please summarize it:" + self.content}
         ]
         self.postprocess = self.para2list_postprocess
         return self
-    
+
     def para2tree(self, maxnum=TEXT2TREE_MAX_NUM):
         """
         para2tree task
@@ -74,7 +74,7 @@ class GPTRequest(object):
         ]
         self.postprocess = self.para2tree_postprocess
         return self
-    
+
     def introSummary(self):
         self.message = [
             {"role": "system",
@@ -109,20 +109,20 @@ class GPTRequest(object):
         ]
         self.postprocess = self.introSummary_postprocess
         return self
-    
+
     # Postprocess
     def para2list_postprocess(self):
         self.ret = re.sub('- ', '', self.ret)
         self.ret = self.ret.split("\n")
-    
+
     def para2tree_postprocess(self):
         self.ret = re.sub('- ', '', self.ret)
         self.ret = self.ret.split("\n")
-    
+
     def introSummary_postprocess(self):
         self.ret = self.ret.split("\n")
         pass
-    
+
     # Run
     def run(self, errsleep=20):
         """
@@ -153,20 +153,20 @@ class GPTRequest(object):
             self.ret = FAKE_GPT_RESPONSE
             self.postprocess()
         self.success = True
-    
+
     def isSuccess(self):
         return self.success
 
 
 class GPTThread(object):
-    
+
     def __init__(self, apikey, rate_limit=THREAD_RATE_LIMIT):
         self.apikey = apikey
         self.thread = None
         self.cooling_time = 60 / rate_limit
         self.last_request_time = None
         self.thread = None
-    
+
     def run(self, gptreq: GPTRequest):
         """ 
         Run a GPT request
@@ -177,7 +177,7 @@ class GPTThread(object):
         self.last_request_time = time.time()
         self.thread = Thread(target=gptreq.run)
         self.thread.start()
-                
+
     def isAvailable(self):
         if self.last_request_time:
             if time.time() - self.last_request_time < self.cooling_time:
@@ -188,8 +188,10 @@ class GPTThread(object):
 
 
 class GPTInterface(object):
-    def __init__(self, apikeys=APIKEYS, model=MODEL, keyword=KEYWORD, gpt_enable=GPT_ENABLE, openai_proxy=PROXY) -> None:
+    def __init__(self, apibase=APIBASE, apikeys=APIKEYS, model=MODEL, keyword=KEYWORD,
+                 gpt_enable=GPT_ENABLE, openai_proxy=PROXY) -> None:
         openai.proxy = openai_proxy
+        openai.api_base = apibase
         self.apikeys = apikeys
         self.model = model
         self.keyword = keyword
@@ -197,7 +199,7 @@ class GPTInterface(object):
         self.request_list = []
         self.thread_list = [GPTThread(apikey) for apikey in self.apikeys]
         self.request_index = {}
-    
+
     def gptMultitask(self, interval=0):
         ptr = 0
         progress = trange(len(self.request_list))
@@ -212,15 +214,14 @@ class GPTInterface(object):
         except KeyboardInterrupt:
             progress.close()
             exit()
-    
+
     def checkSuccessNum(self):
         return [req.isSuccess() for req in self.request_list].count(True)
-    
+
     def addRequest(self, gptreq: GPTRequest, index=None):
         self.request_list.append(gptreq)
         if index:
             self.request_index[index] = gptreq
-            
+
     def getResponse(self, index):
         return self.request_index[index].ret
-

@@ -1,3 +1,4 @@
+from fileinput import filename
 from hashlib import md5
 import random
 import re
@@ -6,8 +7,21 @@ import fitz
 import os
 import tempfile
 import numpy as np
+from os import path as op
+import subprocess
+import json
+# FIXME: this is not robust
 from config import *
+
 TEMP_DIR = tempfile.mkdtemp()
+DIR_PATH = op.dirname(op.abspath(__file__))
+PDF_FIGURES_JAR_PATH = op.join(
+    DIR_PATH, "pdffigures2", "pdffigures2-assembly-0.0.12-SNAPSHOT.jar"
+)
+
+#######################
+##  Misc. Functions  ##
+#######################
 
 # debugging
 def draw_all_textbbox(pdf, colorList=[(1,0,0),(0,1,0),(1,0,1)],
@@ -633,3 +647,52 @@ def getFigRect(page, drawDen=DEBUG_MODE):
         for rect in combine_rect:
             page.draw_rect(rect, color=(0, 1, 0), width=2)
     return combine_rect
+
+
+########################
+##  PDFFigures 2 API  ##
+########################
+"""
+  <input>
+        input PDF(s) or directory containing PDFs
+  -i <value> | --dpi <value>
+        DPI to save the figures in (default 150)
+  -s <value> | --save-stats <value>
+        Save the errors and timing information to the given file in JSON fromat
+  -t <value> | --threads <value>
+        Number of threads to use, 0 means using Scala's default
+  -e | --ignore-error
+        Don't stop on errors, errors will be logged and also saved in `save-stats` if set     
+  -q | --quiet
+        Switches logging to INFO level
+  -d <value> | --figure-data-prefix <value>
+        Save JSON figure data to '<data-prefix><input_filename>.json'
+  -c | --save-regionless-captions
+        Include captions for which no figure regions were found in the JSON data
+  -g <value> | --full-text-prefix <value>
+        Save the document and figures into '<full-text-prefix><input_filename>.json
+  -m <value> | --figure-prefix <value>
+        Save figures as <figure-prefix><input_filename>-<Table|Figure><Name>-<id>.png. `id` will be 1 unless multiple figures are found with the same `Name` in `input_filename`
+  -f <value> | --figure-format <value>
+        Format to save figures (default png)
+"""
+
+
+def parsePDF_PDFFigures2(pdf_file: str):
+    """
+    Parse figures from the given scientific PDF using pdffigures2
+    """
+    args = [
+        "java",
+        "-jar",
+        PDF_FIGURES_JAR_PATH,
+        pdf_file,
+        "-g",
+        op.join(TEMP_DIR, "")
+    ]
+    _ = subprocess.run(
+        args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=20
+    )
+    return json.load(open(op.join(TEMP_DIR, op.basename(pdf_file).replace(".pdf", ".json"))))
+
+        

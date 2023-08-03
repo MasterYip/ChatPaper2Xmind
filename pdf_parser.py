@@ -1,8 +1,10 @@
 import re
+from typing_extensions import override
 import fitz
-from pdf_extract import get_eqbox, getEqRect, get_box_textpos, getFigRect
+from pdf_extract import get_bounding_box, get_eqbox, getEqRect, get_box_textpos, getFigRect, parsePDF_PDFFigures2
 from config import *
 import os
+import typing
 # import arxiv
 
 
@@ -101,22 +103,6 @@ class PDFPaperParser:
         return ''
 
     # Section Dict Extract
-    # Deprecated
-    def get_section_titles_legacy(self):
-        text = self.all_text
-        match_str = '\n('+'|'.join(
-            self.section_numbering[0]+self.section_numbering[1])+')(\s.*)'
-        # clip the reference part
-        ref_match = re.search(self.ref_matchstr, text)
-        refpos = ref_match.span()[0] if ref_match else len(text)
-        # search for all sections
-        numbering_match = re.findall(match_str, text[:refpos])
-        section_title = [re.search(self.abstrct_matchstr, text).group()]\
-            + [m[0]+m[1] for m in numbering_match]\
-            + [ref_match.group()]
-        # TODO: ref?
-        return section_title
-
     def get_section_titles(self, withlevel=False):
         section_title = []
         ref_break_flag = False
@@ -194,7 +180,7 @@ class PDFPaperParser:
                     break
         return section_dict
 
-    def get_section_imagedict(self):
+    def get_section_imagedict(self, verbose=False):
         """
         Get image dict of each section
         
@@ -209,8 +195,11 @@ class PDFPaperParser:
                 for box in img_box:
                     img_ls.append((get_box_textpos(page, box, self.all_text),
                                    i, box))
+        if verbose:
+            print('Total images found:', len(img_ls))
         section_title = self.get_section_titles()
         section_dict = {}
+        match_cnt = 0
         for i in range(0, len(section_title)-1):
             title = section_title[i]
             section_dict[title] = []
@@ -220,7 +209,90 @@ class PDFPaperParser:
             for img in img_ls:
                 if img[0] > begin_pos and img[0] < end_pos:
                     section_dict[title].append(img)
+                    match_cnt += 1
                 # elif section_dict[title]:
                 #     break
+        if verbose:
+            print('Images match the content:', match_cnt)
         return section_dict
 
+class PDFFigure2PaperParser(PDFPaperParser):
+    """
+    Parse paper from PDF file with figure2paper
+    """
+    @override
+    def __init__(self, path, title='', url='', authors=[]):
+        self.PDFF2data = parsePDF_PDFFigures2(path)
+        super().__init__(path, title, url, authors)
+    
+    # Doesn't perform well
+    @override
+    def get_section_titles(self, withlevel=False, verbose=False):
+        PDFFTitles = []
+        for d in self.PDFF2data['sections']:
+            if d.get('title'):
+                if re.match("|".join(SECTIONNUM_MATCHSTR[0]), d['title']['text']):
+                    # FIXME: Bug may exist when encounter with 'I.'
+                    PDFFTitles.append((d['title']['text'], 1))
+                else:
+                    PDFFTitles.append((d['title']['text'], 2))
+        matchStrTitles = super().get_section_titles(withlevel=True)
+        # TODO: merge it rather than len compare
+        titles = PDFFTitles if len(PDFFTitles) > len(matchStrTitles) else matchStrTitles
+        return titles if withlevel else [t[0] for t in titles]
+    
+    # @override
+    # def get_section_textdict(self):
+        # pass
+    
+    @override
+    def get_abstract(self):
+        """
+        Get abstract of the paper.
+        :return: Abstract text, None if not found
+        """
+        return self.PDFF2data.get('abstractText').get('text')
+    
+    @override
+    def get_section_imagedict(self, snapWithCap=SNAP_WITH_CAPTION, verbose=False):
+        """
+        Get image dict of each section
+        :return: Dict of section titles with tuple item list
+        (img_text_pos, page_number, img_bbox, img_caption)
+        """
+        img_ls = []
+        for d in self.PDFF2data['figures']:
+            if snapWithCap:
+                box = get_bounding_box([
+                        (d['regionBoundary']['x1'], d['regionBoundary']['y1'],
+                         d['regionBoundary']['x2'], d['regionBoundary']['y2']),
+                        (d['captionBoundary']['x1'], d['captionBoundary']['y1'],
+                         d['captionBoundary']['x2'], d['captionBoundary']['y2'])])
+                img_ls.append((get_box_textpos(self.pdf[d['page']], box, self.all_text),
+                            d['page'], box))
+            else:
+                box = (d['regionBoundary']['x1'], d['regionBoundary']['y1'],
+                       d['regionBoundary']['x2'], d['regionBoundary']['y2'])
+                img_ls.append((get_box_textpos(self.pdf[d['page']], box, self.all_text),
+                            d['page'], box, d['caption']))
+        if verbose:
+            print('Total images found:', len(img_ls))
+        section_title = self.get_section_titles()
+        section_dict = {}
+        match_cnt = 0
+        for i in range(0, len(section_title)-1):
+            title = section_title[i]
+            section_dict[title] = []
+            latter_title = section_title[i+1]
+            begin_pos = self.all_text.find(title)+len(title)
+            end_pos = self.all_text.find(latter_title)
+            for img in img_ls:
+                if img[0] > begin_pos and img[0] < end_pos:
+                    section_dict[title].append(img)
+                    match_cnt += 1
+                # elif section_dict[title]:
+                #     break
+        if verbose:
+            print('Images match the content:', match_cnt)
+        return section_dict
+    
