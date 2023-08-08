@@ -21,7 +21,9 @@ git submodule update --init --recursive
 
 基本设置
 
-- **APIKEY设置(必须配置)**：在`config.py`中加入APIKEYs（支持多线程请求）
+- **APIKEY设置(必须配置)**：在`config.py`中加入APIKEYs
+  - 支持多线程请求
+  - **没有APIKEY的同学可以参考[ChatGPT_API_NoKey](https://github.com/MasterYip/ChatGPT_API_NoKey)配置伪API服务器，并更改openai.api_base来实现伪API访问**，此情况下APIKEY需设置任意值（不能为空）
 - GPT模型选择：在`config.py`中设置MODEL变量为所需的模型，目前提供"GPT-3.5-turbo"模型可选。
 - 语言设置：在`config.py`中设置LANGUAGE变量以选择模型的语言，默认为英语，但部分支持中文。
 - 领域关键词：在`config.py`中设置KEYWORD变量以指定模型关注的领域关键词。
