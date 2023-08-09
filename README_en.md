@@ -13,16 +13,18 @@ ChatPaper2XMind is a tool for generating concise XMind notes from PDF papers usi
 ## Installation and Usage
 ### 1. Environment Setup
 ```
-cd <root-dir>
+git clone --recursive https://github.com/MasterYip/ChatPaper2Xmind.git
+cd <work-dir>
 pip install -r requirements.txt
-git submodule update --init --recursive
 ```
 
 ### 2. Config Configuration
 
 Basic Settings
 
-- **APIKEY Setup (required)**: Add APIKEYs to `config.py` (supports multi-threaded requests).
+- **APIKEY Configuration (Required)**: Add your API keys in `config.py`.
+  - Supports multi-threaded requests.
+  - **For those without an API key, you can refer to [ChatGPT_API_NoKey](https://github.com/MasterYip/ChatGPT_API_NoKey) for configuring a mock API server and modify `openai.api_base` to achieve mock API access.** In this case, the API key must be set to any value (cannot be empty).
 - GPT Model Selection: Set the MODEL variable in `config.py` to the desired model. Currently, "GPT-3.5-turbo" model is available.
 - Language Setting: Set the LANGUAGE variable in `config.py` to select the language of the model. The default is English, but partial support for Chinese is available.
 - Domain Keyword: Set the KEYWORD variable in `config.py` to specify the domain keyword that the model should focus on.

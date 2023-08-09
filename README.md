@@ -13,9 +13,9 @@ ChatPaper2XMind论文XMind笔记生成工具：使用ChatGPT将PDF转换为带�
 ## 安装与使用
 ### 1. 环境设置
 ```
-cd <root-dir>
+git clone --recursive https://github.com/MasterYip/ChatPaper2Xmind.git
+cd <work-dir>
 pip install -r requirements.txt
-git submodule update --init --recursive
 ```
 ### 2. Config配置
 
