@@ -211,7 +211,7 @@ class PDFPaperParser:
         for title in section_title[:-1]:
             section_dict[title] = []
             for eqa in eqa_ls:
-                if eqa[0] > pos_dict[title][0] and eqa[0] <= pos_dict[title][0]:
+                if eqa[0] > pos_dict[title][0] and eqa[0] <= pos_dict[title][1]:
                     section_dict[title].append(eqa)
                 elif section_dict[title]:
                     break
