@@ -18,7 +18,7 @@ GEN_IMGS = True
 GEN_EQUATIONS = False
 
 # PDFFigure2
-USE_PDFFIGURE2 = True
+USE_PDFFIGURE2 = True     # IMPORTANT: This requires you to install Java
 SNAP_WITH_CAPTION = True  # Only valid when USE_PDFFIGURE2 is True
 
 # Max generation item number
@@ -41,13 +41,8 @@ INTRO_MATCHSTR = "I.[\s]{1,3}(INTRODUCTION|Introduction|introduction)"
 REF_MATCHSTR = "Reference|REFERENCE|Bibliography"
 APD_MATCHSTR = "APPENDIX|Appendix"  # Not used for now
 # General
-SECTIONNUM_MATCHSTR = [  # Level 1
-                        ["I\.", "II\.", "III\.", "IV\.", "V\.", "VI\.", "VII\.", "VIII\.", "IIX\.", "IX\.", "X\.",
-                         "[1-9]\."],
-                         # Level 2
-                        ["A\.", "B\.", "C\.", "D\.", "E\.", "F\.", "G\.", "H\.", "I\.", "J\.",
-                         "[1-9]\.[1-9]\."]]
-SECTION_TITLE_MATCHSTR = ["[IVX1-9]{1,4}[\.\s][\sA-Za-z]{1,}",  # Level 1
+# FIXME: Misidentification exists
+SECTION_TITLE_MATCHSTR = ["[IVX1-9]{1,4}[\.\s][\sA-Za-z]{1,}|[1-9]{1,2}[\s\.\n][\sA-Za-z]{1,}",  # Level 1
                           "[A-Z]{1}\.[\sA-Za-z]{1,}|[1-9]\.[1-9]\.[\sA-Za-z]{1,}"]  # Level 2
 # Equation & Image
 EQUATION_MATCHSTR = '[\s]{0,}\([\d]{1,}[a-zA-Z]{0,1}\)'

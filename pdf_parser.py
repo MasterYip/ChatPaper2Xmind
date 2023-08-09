@@ -131,12 +131,12 @@ class PDFPaperParser:
                 tol = 1
                 line_text = ""
                 for line in lines:
-                    if abs(pos_y-line["bbox"][1]) < tol:
-                        line_text = line_text + "".join([span["text"] for span in line["spans"]]) + "\n"
                     for span in line["spans"]:
                         if span['font'].startswith('CM') or span['font'].startswith('MSBM'):
                             is_equation = True
                             break
+                    if abs(pos_y-line["bbox"][1]) < tol:
+                        line_text = line_text + "".join([span["text"] for span in line["spans"]]) + "\n"
                     else:
                         break
                 if is_inbox(block['bbox'][0:2], get_bounding_box(getColumnRectLegacy(page)))\
