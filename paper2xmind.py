@@ -1,19 +1,17 @@
 import os
-import sys
 import argparse
-
-if 'E:\\CodeTestFile\\comprehensive-coding' not in sys.path:
-    sys.path.append('E:\\CodeTestFile\\comprehensive-coding')
-
 from XmindCopilot import xmind, fileshrink
-from pdf_parser import PDFPaperParser
+from pdf_parser import PDFFigure2PaperParser, PDFPaperParser
 from pdf_extract import *
 from xmind_tree import Xmindtree
 from config import *
 from glob import glob
 
-def pdf_processing(pdf_file_path, xmind_file_path):
-    paper = PDFPaperParser(pdf_file_path)
+def pdf_processing(pdf_file_path, xmind_file_path, usePDFFigure2=USE_PDFFIGURE2, verbose=DEBUG_MODE):
+    if usePDFFigure2:
+        paper = PDFFigure2PaperParser(pdf_file_path)
+    else:
+        paper = PDFPaperParser(pdf_file_path)
     if os.path.isfile(xmind_file_path):
         workbook = xmind.load(xmind_file_path)
     else:
@@ -22,7 +20,7 @@ def pdf_processing(pdf_file_path, xmind_file_path):
     root_topic = sheet.getRootTopic()
     paper_topic = root_topic.addSubTopicbyTitle(paper.title[:15])
     tree = Xmindtree(paper_topic, paper, paper.title[:15])
-    tree.gen_summary()
+    tree.gen_summary(verbose=verbose)
     tree.save_xmind(xmind_file_path)
     if DEBUG_MODE:
         paper.save_pdf(debug=True)

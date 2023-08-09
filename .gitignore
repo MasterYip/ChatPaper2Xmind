@@ -1,4 +1,5 @@
 *.py[cdi]
+private_config.py
 
 ####
-# PDFexample
+PDFexample

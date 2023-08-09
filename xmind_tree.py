@@ -2,6 +2,7 @@ from XmindCopilot import xmind
 from XmindCopilot.xmind.core.topic import TopicElement
 from XmindCopilot.search import topic_search
 from XmindCopilot.fileshrink import xmind_shrink
+from config import GEN_EQUATIONS, GEN_IMGS
 from gpt_interface import GPTInterface, GPTRequest
 from pdf_extract import get_objpixmap
 import re
@@ -43,6 +44,7 @@ class Xmindtree(TopicElement):
         content_dict = self.paper.get_section_textdict()
         section_names = self.paper.get_section_titles()
         
+        # FIXME: Abstract & Introduction Summary may not exist for some time.
         # Abstract
         self.gpt.addRequest(GPTRequest(self.paper.abstract).para2list(), section_names[0])
         # Introduction Summary
@@ -81,28 +83,40 @@ class Xmindtree(TopicElement):
                     topic_search(self, name).addSubTopicbyImage(
                         eqa_tempdir, eqa_ls.index(eqa))
 
-    def gen_image(self):
+    def gen_image(self, verbose=False):
         """
         Generate image for each section in xmind (Figure/Table)
         """
         section_names = self.paper.get_section_titles()
-        img_dict = self.paper.get_section_imagedict()
+        img_dict = self.paper.get_section_imagedict(verbose=verbose)
         for name in section_names[:-1]:
             img_ls = img_dict.get(name)
-            # if img_ls: print(name, img_ls)
             if img_ls:
                 for img in img_ls:
                     img_tempdir = get_objpixmap(self.paper.pdf, img)
-                    topic_search(self, name).addSubTopicbyImage(
-                        img_tempdir, img_ls.index(img))
+                    topic = topic_search(self, name).addSubTopicbyImage(
+                            img_tempdir, img_ls.index(img))
+                    # FIXME: This is a temporary solution for compatibility
+                    if len(img) == 4:
+                        topic.setTitle(img[3])
+                        topic.setTitleSvgWidth()
 
-    def gen_summary(self, folded=True):
+    def gen_summary(self, folded=True, verbose=False):
         self.gen_table_of_content()
         print("\033[94mChatGPT Requesting...\033[97m")
         self.gen_textbrief()
         print("\033[94mImages Generating...")
-        self.gen_equation(legacy=False)
-        self.gen_image()
+        if GEN_EQUATIONS:
+            self.gen_equation(legacy=False)
+        if GEN_IMGS:
+            self.gen_image(verbose=verbose)
+        self.removeSubTopicWithEmptyTitle()
+        
+        def removeNewlineinTitle(topic):
+            title = topic.getTitle()
+            if title:
+                topic.setTitle(title.replace('\n', ''))
+        self.modify(removeNewlineinTitle, recursive=True)
         if folded:
             self.setFolded(True)
 
