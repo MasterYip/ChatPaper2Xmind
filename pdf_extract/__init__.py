@@ -153,6 +153,9 @@ def get_plaintext_sample(page, box, sample_len=20):
 
 
 def get_box_textpos(page, box, all_text):
+    """ get the position of the box in the all_text
+    TODO: This is not a robust method to find the position of the box.
+    """
     text = get_plaintext_sample(page, box)
     return all_text.find(text)
 

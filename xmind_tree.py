@@ -44,6 +44,7 @@ class Xmindtree(TopicElement):
         content_dict = self.paper.get_section_textdict()
         section_names = self.paper.get_section_titles()
         
+        # FIXME: Abstract & Introduction Summary may not exist for some time.
         # Abstract
         self.gpt.addRequest(GPTRequest(self.paper.abstract).para2list(), section_names[0])
         # Introduction Summary
@@ -99,7 +100,6 @@ class Xmindtree(TopicElement):
                     if len(img) == 4:
                         topic.setTitle(img[3])
                         topic.setTitleSvgWidth()
-                        
 
     def gen_summary(self, folded=True, verbose=False):
         self.gen_table_of_content()
@@ -110,6 +110,13 @@ class Xmindtree(TopicElement):
             self.gen_equation(legacy=False)
         if GEN_IMGS:
             self.gen_image(verbose=verbose)
+        self.removeSubTopicWithEmptyTitle()
+        
+        def removeNewlineinTitle(topic):
+            title = topic.getTitle()
+            if title:
+                topic.setTitle(title.replace('\n', ''))
+        self.modify(removeNewlineinTitle, recursive=True)
         if folded:
             self.setFolded(True)
 
