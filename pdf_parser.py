@@ -139,8 +139,8 @@ class PDFPaperParser:
                         line_text = line_text + "".join([span["text"] for span in line["spans"]]) + "\n"
                     else:
                         break
-                if is_inbox(block['bbox'][0:2], get_bounding_box(getColumnRectLegacy(page)))\
-                   and is_inbox(block['bbox'][2:4], get_bounding_box(getColumnRectLegacy(page))) and not is_equation:
+                if is_inbox(block['bbox'][0:2], get_bounding_box(getColumnRectLegacy(page, ymargin=40)))\
+                   and is_inbox(block['bbox'][2:4], get_bounding_box(getColumnRectLegacy(page, ymargin=40))) and not is_equation:
                     if re.match(level2_matchstr, line_text):
                         if line_text.startswith('I.') and len(section_title) < 7:  # Considering I. i.e. ABCDEFGHI
                             section_title.append((line_text, 1))
