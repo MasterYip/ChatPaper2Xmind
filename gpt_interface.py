@@ -112,15 +112,17 @@ class GPTRequest(object):
 
     # Postprocess
     def para2list_postprocess(self):
-        self.ret = re.sub('- ', '', self.ret)
-        self.ret = self.ret.split("\n")
+        # self.ret = re.sub('- ', '', self.ret)
+        # self.ret = self.ret.split("\n")
+        pass
 
     def para2tree_postprocess(self):
-        self.ret = re.sub('- ', '', self.ret)
-        self.ret = self.ret.split("\n")
+        # self.ret = re.sub('- ', '', self.ret)
+        # self.ret = self.ret.split("\n")
+        pass
 
     def introSummary_postprocess(self):
-        self.ret = self.ret.split("\n")
+        # self.ret = self.ret.split("\n")
         pass
 
     # Run

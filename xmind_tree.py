@@ -60,10 +60,8 @@ class Xmindtree(TopicElement):
         self.gpt.gptMultitask()
         # Add to xmind
         for name in section_names[:-1]:
-            content_ls = self.gpt.getResponse(name)
-            topic_search(self, name).addSubTopicbyIndentedList(
-                [content for content in content_ls], 0)
-                # [content for content in content_ls if len(content) > self.minlength], 0)
+            content = self.gpt.getResponse(name)
+            topic_search(self, name).addSubTopicbyMarkDown(content, index=0)
 
     def gen_equation(self, legacy=True):
         """
