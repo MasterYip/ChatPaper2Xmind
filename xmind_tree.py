@@ -1,7 +1,7 @@
-from XmindCopilot import xmind
-from XmindCopilot.xmind.core.topic import TopicElement
-from XmindCopilot.search import topic_search
-from XmindCopilot.fileshrink import xmind_shrink
+from XmindCopilot import XmindCopilot
+from XmindCopilot.XmindCopilot.core.topic import TopicElement
+from XmindCopilot.XmindCopilot.search import topic_search
+from XmindCopilot.XmindCopilot.file_shrink import xmind_shrink
 from config import GEN_EQUATIONS, GEN_IMGS
 from gpt_interface import GPTInterface, GPTRequest
 from pdf_extract import get_objpixmap
@@ -122,6 +122,6 @@ class Xmindtree(TopicElement):
 
     def save_xmind(self, path=None, img_compress=False):
         """Not recommanded yet"""
-        xmind.save(self.getOwnerWorkbook(), path=path)
+        XmindCopilot.save(self.getOwnerWorkbook(), path=path)
         if img_compress:
             xmind_shrink(self.getOwnerWorkbook().get_path())
