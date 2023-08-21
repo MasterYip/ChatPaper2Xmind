@@ -16,6 +16,7 @@ ChatPaper2XMind论文XMind笔记生成工具：使用ChatGPT将PDF转换为带�
 git clone --recursive https://github.com/MasterYip/ChatPaper2Xmind.git
 cd <work-dir>
 pip install -r requirements.txt
+pip install -r ./XmindCopilot/requirements.txt
 ```
 ### 2. Config配置
 

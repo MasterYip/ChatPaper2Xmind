@@ -16,6 +16,7 @@ ChatPaper2XMind is a tool for generating concise XMind notes from PDF papers usi
 git clone --recursive https://github.com/MasterYip/ChatPaper2Xmind.git
 cd <work-dir>
 pip install -r requirements.txt
+pip install -r ./XmindCopilot/requirements.txt
 ```
 
 ### 2. Config Configuration
