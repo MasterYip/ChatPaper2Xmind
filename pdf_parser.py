@@ -173,7 +173,7 @@ class PDFPaperParser:
                 print(f"Warning: {title} not found in all_text.")
         return section_dict
             
-    def get_section_textdict(self):
+    def get_section_textdict(self, remove_title=False):
         """
         Get section text dict of the paper.
         :return: Dict of section titles with text content
@@ -183,7 +183,10 @@ class PDFPaperParser:
         pos_dict = self.get_section_textposdict()
         section_dict = {}
         for title in section_title[:-1]:
-            section_dict[title] = self.all_text[pos_dict[title][0]:pos_dict[title][1]]
+            if not remove_title:
+                section_dict[title] = self.all_text[pos_dict[title][0]:pos_dict[title][1]]
+            else:
+                section_dict[title] = self.all_text[pos_dict[title][0]+len(title):pos_dict[title][1]]
         return section_dict
 
     def get_section_equationdict(self, legacy=False):

@@ -61,14 +61,10 @@ class GPTRequest(object):
                 "content": f"""
                     Your mission is to summarize paragraphs.
                     Requirements:
-                    1. Summarize given content in multi-level list.
-                    2. Each item in the list must not contain more than 20 words.
-                    3. Total number of items in the list must not exceed {maxnum}.
-                    4. Items are separated by '\n'
-                    5. Items are indented by '\t'
-                    6. Child item has one more indentation than its father.
-                    7. No prefix(1. 1.1 - or other prefix) is permitted in each item except '\t'.
-                    8. Sumarize in {LANGUAGE}.
+                    1. Summarize in multi-level list in markdown style.
+                    2. Total number of items in the list must not exceed {maxnum}.
+                    3. Sumarize in {LANGUAGE}.
+                    4. Ignore the irregular text that probably belong to math equations.
                 """},
             {"role": "user", "content": "Content:" + self.content}
         ]

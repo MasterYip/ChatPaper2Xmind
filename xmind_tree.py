@@ -41,7 +41,7 @@ class Xmindtree(TopicElement):
         `Note: This might be time consuming`
         """
         # Add Request Tasks
-        content_dict = self.paper.get_section_textdict()
+        content_dict = self.paper.get_section_textdict(remove_title=True)
         section_names = self.paper.get_section_titles()
         
         # FIXME: Abstract & Introduction Summary may not exist for some time.
