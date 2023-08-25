@@ -242,6 +242,7 @@ class PDFPaperParser:
         section_dict = {}
         match_cnt = 0
         for title in section_title[:-1]:
+            section_dict[title] = []
             for img in img_ls:
                 if img[0] > pos_dict[title][0] and img[0] < pos_dict[title][1]:
                     section_dict[title].append(img)
