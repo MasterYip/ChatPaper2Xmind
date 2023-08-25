@@ -7,6 +7,16 @@ ChatPaper2XMind is a tool for generating concise XMind notes from PDF papers usi
 
 **Note: Due to the limitations of the ChatGPT generation model's accuracy, the generated XMind notes are more suitable as note drafts, which can be used as a basis for creating reading notes, rather than directly using them for paper reading.**
 
+**Contents**
+- [Functionality Showcase](#functionality-showcase)
+- [Installation and Usage](#installation-and-usage)
+  - [1. Environment Setup](#1-environment-setup)
+  - [2. Configuration (config.py)](#2-configuration-configpy)
+  - [3. Getting Started](#3-getting-started)
+- [Common Errors](#common-errors)
+- [Future Work](#future-work)
+- [Acknowledgements](#acknowledgements)
+
 ## Functionality Showcase
 ![Document Conversion](doc/feature-Paper2Xmind.png)
 
