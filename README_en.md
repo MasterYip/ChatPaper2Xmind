@@ -32,7 +32,7 @@ pip install -r ./XmindCopilot/requirements.txt
 **OpenAI API Settings**
 ```
 """OpenAI API"""
-APIBASE = "https://api.openai.com/v1/engines/"
+APIBASE = ""                    # OpenAI API base, default is "https://api.openai.com/v1" for now (Leave it as empty if you are not sure)
 APIKEYS = [""]                  # Your OpenAI API keys
 MODEL = "gpt-3.5-turbo"         # GPT model name
 LANGUAGE = "English"            # Only partially support Chinese
