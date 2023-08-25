@@ -188,8 +188,10 @@ class GPTThread(object):
 class GPTInterface(object):
     def __init__(self, apibase=APIBASE, apikeys=APIKEYS, model=MODEL, keyword=KEYWORD,
                  gpt_enable=GPT_ENABLE, openai_proxy=PROXY) -> None:
-        openai.proxy = openai_proxy
-        openai.api_base = apibase
+        if openai_proxy:
+            openai.proxy = openai_proxy
+        if apibase:
+            openai.api_base = apibase
         self.apikeys = apikeys
         self.model = model
         self.keyword = keyword
