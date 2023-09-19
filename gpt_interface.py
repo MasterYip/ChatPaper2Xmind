@@ -1,13 +1,50 @@
+from config import *
 import openai
-import re
 from threading import Thread
 import time
 from tqdm import trange
 from config import *
-# import openai
-# import requests
-# import tenacity
-# import tiktoken
+import tiktoken
+
+
+def countTokens(string: str, encoding_name: str) -> int:
+    """
+    Get the number of tokens in a string, using the given encoding.
+    :param string: The string to count tokens in.
+    :param encoding_name: The name of the encoding to use, e.g. gpt-3.5-turbo.
+    :note: Make sure `pip install --upgrade tiktoken`
+    """
+    encoding = tiktoken.encoding_for_model(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens
+
+
+def autoCutoff(string: str, encoding_name: str = MODEL, max_tokens: int = MAXTOKEN) -> str:
+    """
+    Automatically cut off a string to a maximum number of tokens, using the given encoding.
+    :param string: The string to cut off.
+    :param encoding_name: The name of the encoding to use, e.g. gpt-3.5-turbo.
+    :param max_tokens: The maximum number of tokens to allow.
+    """
+    encoding = tiktoken.encoding_for_model(encoding_name)
+    tokens = encoding.encode(string)
+    if len(tokens) > max_tokens:
+        tokens = tokens[:max_tokens]
+        string = encoding.decode(tokens)
+    return string
+
+
+def messageAutoCutoff(message: list, encoding_name: str = MODEL, max_tokens: int = MAXTOKEN):
+    token_cnt = 0
+    for item in message:
+        token_cnt += countTokens(item['content'], encoding_name)
+    if token_cnt > max_tokens:
+        for item in message:
+            if item['role'] == 'user':
+                item['content'] = autoCutoff(item['content'], encoding_name, countTokens(
+                    item['content'], encoding_name) + max_tokens - token_cnt)
+                break
+    return message
 
 
 class GPTRequest(object):
@@ -134,7 +171,7 @@ class GPTRequest(object):
                 try:
                     completions = openai.ChatCompletion.create(
                         model=self.model,
-                        messages=self.message,
+                        messages=messageAutoCutoff(self.message),
                     )
                 except Exception as e:
                     print(e)
