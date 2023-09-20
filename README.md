@@ -186,3 +186,6 @@ Master Yip
 电子邮件：2205929492@qq.com
 
 GitHub：[Master Yip](https://github.com/MasterYip)
+
+QQ 交流群：
+![QQ](doc/QQ.jpg)

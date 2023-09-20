@@ -189,3 +189,6 @@ Master Yip
 Email: 2205929492@qq.com
 
 GitHub: [Master Yip](https://github.com/MasterYip)
+
+QQ Group：
+![QQ](doc/QQ.jpg)
