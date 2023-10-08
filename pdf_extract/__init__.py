@@ -1,4 +1,3 @@
-from fileinput import filename
 from hashlib import md5
 import random
 import re
@@ -359,7 +358,7 @@ def combineRect(bbox, critic_dis=5, critic_alignerr=10, dir=1):
 
 
 ## General Object Detect
-def getDensityMap(BoxWeightList, roi: tuple[4],
+def getDensityMap(BoxWeightList, roi,
                   resolution=100, dir=1, slideavg_windowsize=1):
     """ Get the density map of the box list
     

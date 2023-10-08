@@ -18,13 +18,14 @@ from PyQt5.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
     QGroupBox, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QSpinBox, QStatusBar, QTextEdit, QWidget)
+    QSpinBox, QStatusBar, QTextBrowser, QTextEdit,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(737, 392)
+        MainWindow.resize(737, 553)
         MainWindow.setAcceptDrops(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -229,6 +230,9 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.pushButton_GENERATE)
 
+        self.textBrowser_Terminal = QTextBrowser(self.centralwidget)
+        self.textBrowser_Terminal.setObjectName(u"textBrowser_Terminal")
+        self.textBrowser_Terminal.setGeometry(QRect(30, 360, 681, 131))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")

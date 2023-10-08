@@ -2,18 +2,20 @@
 Author: MasterYip 2205929492@qq.com
 Date: 2023-10-08 09:23:35
 LastEditors: MasterYip
-LastEditTime: 2023-10-08 15:10:14
+LastEditTime: 2023-10-08 17:07:16
 FilePath: \ChatPaper2Xmind\main_window.py
 Description: file content
 '''
 
 import os
+import re
 import sys
 import json
 from config import *
 from paper2xmind import pdf_batch_processing
 from user_interface_ui_pyqt5 import *
 from PyQt5.QtCore import QThread, pyqtSignal, QRect
+from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
 
 # Directory Management
@@ -194,5 +196,4 @@ if __name__ == '__main__':
 
     myWin = MainWindow()
     myWin.show()
-
-    sys.exit(app.exec())
+    app.exec()
