@@ -230,6 +230,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.pushButton_GENERATE)
 
+        self.pushButton_STOP = QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_STOP.setObjectName(u"pushButton_STOP")
+
+        self.horizontalLayout.addWidget(self.pushButton_STOP)
+
         self.textBrowser_Terminal = QTextBrowser(self.centralwidget)
         self.textBrowser_Terminal.setObjectName(u"textBrowser_Terminal")
         self.textBrowser_Terminal.setGeometry(QRect(30, 360, 681, 131))
@@ -286,5 +291,6 @@ class Ui_MainWindow(object):
         self.groupBox_3.setTitle("")
         self.pushButton_SAVE_CONFIG.setText(QCoreApplication.translate("MainWindow", u"Save Config", None))
         self.pushButton_GENERATE.setText(QCoreApplication.translate("MainWindow", u"Generate", None))
+        self.pushButton_STOP.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
     # retranslateUi
 

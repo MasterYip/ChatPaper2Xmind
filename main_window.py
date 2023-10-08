@@ -2,7 +2,7 @@
 Author: MasterYip 2205929492@qq.com
 Date: 2023-10-08 09:23:35
 LastEditors: MasterYip
-LastEditTime: 2023-10-08 17:33:32
+LastEditTime: 2023-10-08 19:26:03
 FilePath: \ChatPaper2Xmind\main_window.py
 Description: file content
 '''
@@ -11,6 +11,7 @@ import os
 import re
 import sys
 import json
+import time
 from threading import Thread
 from config import *
 from paper2xmind import pdf_batch_processing
@@ -30,13 +31,18 @@ except:
 
 class OutputRedirectThread(QThread):
     signalForText = pyqtSignal(str)
+    update_interval = 2
+    last_update_time = 0
 
     def __init__(self, data=None, parent=None):
         super(OutputRedirectThread, self).__init__(parent)
         self.data = data
 
     def write(self, text):
-        self.signalForText.emit(str(text))
+        if time.time() - self.last_update_time > self.update_interval or\
+                not text.endswith("it/s]"):
+            self.signalForText.emit(str(text))
+            self.last_update_time = time.time()
 
 
 class FileEdit(QLineEdit):
@@ -79,7 +85,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.th.signalForText.connect(self.onUpdateTerminal)
         sys.stdout = self.th
         sys.stderr = self.th
+
         self.config = {}
+        self.process_thread = None
 
         self.setWindowIcon(QIcon(os.path.join(ROOT_DIR, "icon.png")))
 
@@ -114,6 +122,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_GENERATE.clicked.connect(self.generate_xmind)
         self.pushButton_SAVE_CONFIG.clicked.connect(self.save_config)
+        self.pushButton_STOP.clicked.connect(self.stop_thread)
 
     def load_config(self):
         if os.path.isfile(self.config_dir):
@@ -169,9 +178,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def generate_xmind(self):
         self.update_config()
-        process_thread = Thread(target=self.generate_xmind_thread)
-        process_thread.start()
+        self.process_thread = Thread(target=self.generate_xmind_thread)
+        self.process_thread.start()
 
+    def stop_thread(self):
+        # if self.process_thread:
+        #     self.process_thread
+            
     def generate_xmind_thread(self):
         pdf_batch_processing(self.lineEdit_PATH.text(), usePDFFigure2=self.config['USE_PDFFIGURE2'],
                              apibase=self.config['APIBASE'], apikeys=self.config['APIKEYS'],
