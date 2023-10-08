@@ -10,9 +10,11 @@ ChatPaper2XMind is a tool for generating concise XMind notes from PDF papers usi
 **Contents**
 - [Functionality Showcase](#functionality-showcase)
 - [Installation and Usage](#installation-and-usage)
-  - [1. Environment Setup](#1-environment-setup)
-  - [2. Configuration (config.py)](#2-configuration-configpy)
-  - [3. Getting Started](#3-getting-started)
+  - [Release Version](#release-version)
+  - [Python Script](#python-script)
+    - [1. Environment Setup](#1-environment-setup)
+    - [2. Configuration (config.py)](#2-configuration-configpy)
+    - [3. Getting Started](#3-getting-started)
 - [Common Errors](#common-errors)
 - [Future Work](#future-work)
 - [Acknowledgements](#acknowledgements)
@@ -21,14 +23,22 @@ ChatPaper2XMind is a tool for generating concise XMind notes from PDF papers usi
 ![Document Conversion](doc/feature-Paper2Xmind.png)
 
 ## Installation and Usage
-### 1. Environment Setup
+### Release Version
+![UI](doc/UI.JPG)
+
+For the meaning of configuration options, please refer to the source code in config.py.
+
+Drag and drop a PDF file or a folder containing PDFs into the input box to generate with a single click.
+
+### Python Script
+#### 1. Environment Setup
 ```
 git clone --recursive https://github.com/MasterYip/ChatPaper2Xmind.git
 cd <work-dir>
 pip install -r requirements.txt
 pip install -r ./XmindCopilot/requirements.txt
 ```
-### 2. Configuration (config.py)
+#### 2. Configuration (config.py)
 **OpenAI API Settings**
 ```
 """OpenAI API"""
@@ -117,7 +127,7 @@ TEMPLATE_XMIND_PATH = 'template.xmind'
 DEBUG_MODE = False
 ```
 
-### 3. Getting Started
+#### 3. Getting Started
 
 Convert PDF papers to XMind
 ```

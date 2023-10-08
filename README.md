@@ -10,9 +10,11 @@ ChatPaper2XMind论文XMind笔记生成工具：使用ChatGPT将PDF转换为带�
 **目录**
 - [功能展示](#功能展示)
 - [安装与使用](#安装与使用)
-  - [1. 环境设置](#1-环境设置)
-  - [2. Config配置(config.py)](#2-config配置configpy)
-  - [3. 开箱使用](#3-开箱使用)
+  - [Release版本](#release版本)
+  - [源码运行](#源码运行)
+    - [1. 环境设置](#1-环境设置)
+    - [2. Config配置(config.py)](#2-config配置configpy)
+    - [3. 开箱使用](#3-开箱使用)
 - [常见错误](#常见错误)
 - [未来工作](#未来工作)
 - [鸣谢](#鸣谢)
@@ -21,14 +23,21 @@ ChatPaper2XMind论文XMind笔记生成工具：使用ChatGPT将PDF转换为带�
 ![文档转换](doc/feature-Paper2Xmind.png)
 
 ## 安装与使用
-### 1. 环境设置
+### Release版本
+![UI](doc/UI.JPG)
+
+设置选项含义详见源码config.py.
+
+拖拽pdf文件或包含pdf的文件夹至输入框中，即可一键生成。
+### 源码运行
+#### 1. 环境设置
 ```
 git clone --recursive https://github.com/MasterYip/ChatPaper2Xmind.git
 cd <work-dir>
 pip install -r requirements.txt
 pip install -r ./XmindCopilot/requirements.txt
 ```
-### 2. Config配置(config.py)
+#### 2. Config配置(config.py)
 **OpenAI API设置**
 ```
 """OpenAI API"""
@@ -115,7 +124,7 @@ TEMPLATE_XMIND_PATH = 'template.xmind'
 DEBUG_MODE = False
 ```
 
-### 3. 开箱使用
+#### 3. 开箱使用
 
 将PDF论文转换为XMind
 ```
