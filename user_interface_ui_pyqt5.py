@@ -24,13 +24,13 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(744, 416)
+        MainWindow.resize(737, 392)
         MainWindow.setAcceptDrops(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.groupBox = QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(u"groupBox")
-        self.groupBox.setGeometry(QRect(10, 20, 351, 331))
+        self.groupBox.setGeometry(QRect(10, 10, 351, 341))
         self.formLayoutWidget = QWidget(self.groupBox)
         self.formLayoutWidget.setObjectName(u"formLayoutWidget")
         self.formLayoutWidget.setGeometry(QRect(20, 30, 311, 291))
@@ -110,10 +110,10 @@ class Ui_MainWindow(object):
 
         self.groupBox_2 = QGroupBox(self.centralwidget)
         self.groupBox_2.setObjectName(u"groupBox_2")
-        self.groupBox_2.setGeometry(QRect(380, 20, 351, 241))
+        self.groupBox_2.setGeometry(QRect(380, 10, 351, 261))
         self.formLayoutWidget_2 = QWidget(self.groupBox_2)
         self.formLayoutWidget_2.setObjectName(u"formLayoutWidget_2")
-        self.formLayoutWidget_2.setGeometry(QRect(20, 30, 321, 212))
+        self.formLayoutWidget_2.setGeometry(QRect(20, 30, 321, 211))
         self.formLayout_2 = QFormLayout(self.formLayoutWidget_2)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.formLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -147,6 +147,16 @@ class Ui_MainWindow(object):
 
         self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.checkBox_USE_PDFFIGURE2)
 
+        self.label_11 = QLabel(self.formLayoutWidget_2)
+        self.label_11.setObjectName(u"label_11")
+
+        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.label_11)
+
+        self.checkBox_SNAP_WITH_CAPTION = QCheckBox(self.formLayoutWidget_2)
+        self.checkBox_SNAP_WITH_CAPTION.setObjectName(u"checkBox_SNAP_WITH_CAPTION")
+
+        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.checkBox_SNAP_WITH_CAPTION)
+
         self.label_13 = QLabel(self.formLayoutWidget_2)
         self.label_13.setObjectName(u"label_13")
 
@@ -167,51 +177,38 @@ class Ui_MainWindow(object):
 
         self.formLayout_2.setWidget(5, QFormLayout.FieldRole, self.checkBox_GPT_ENABLE)
 
-        self.formLayout_3 = QFormLayout()
-        self.formLayout_3.setObjectName(u"formLayout_3")
         self.label_21 = QLabel(self.formLayoutWidget_2)
         self.label_21.setObjectName(u"label_21")
+        self.label_21.setScaledContents(False)
+        self.label_21.setWordWrap(False)
 
-        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.label_21)
+        self.formLayout_2.setWidget(6, QFormLayout.LabelRole, self.label_21)
 
         self.spinBox_TEXT2LIST_MAX_NUM = QSpinBox(self.formLayoutWidget_2)
         self.spinBox_TEXT2LIST_MAX_NUM.setObjectName(u"spinBox_TEXT2LIST_MAX_NUM")
 
-        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.spinBox_TEXT2LIST_MAX_NUM)
+        self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.spinBox_TEXT2LIST_MAX_NUM)
 
         self.label_22 = QLabel(self.formLayoutWidget_2)
         self.label_22.setObjectName(u"label_22")
 
-        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.label_22)
+        self.formLayout_2.setWidget(7, QFormLayout.LabelRole, self.label_22)
 
         self.spinBox_TEXT2TREE_MAX_NUM = QSpinBox(self.formLayoutWidget_2)
         self.spinBox_TEXT2TREE_MAX_NUM.setObjectName(u"spinBox_TEXT2TREE_MAX_NUM")
 
-        self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.spinBox_TEXT2TREE_MAX_NUM)
+        self.formLayout_2.setWidget(7, QFormLayout.FieldRole, self.spinBox_TEXT2TREE_MAX_NUM)
 
         self.label_23 = QLabel(self.formLayoutWidget_2)
         self.label_23.setObjectName(u"label_23")
 
-        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.label_23)
+        self.formLayout_2.setWidget(8, QFormLayout.LabelRole, self.label_23)
 
         self.spinBox_THREAD_RATE_LIMIT = QSpinBox(self.formLayoutWidget_2)
         self.spinBox_THREAD_RATE_LIMIT.setObjectName(u"spinBox_THREAD_RATE_LIMIT")
         self.spinBox_THREAD_RATE_LIMIT.setMaximum(999)
 
-        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.spinBox_THREAD_RATE_LIMIT)
-
-
-        self.formLayout_2.setLayout(6, QFormLayout.FieldRole, self.formLayout_3)
-
-        self.label_11 = QLabel(self.formLayoutWidget_2)
-        self.label_11.setObjectName(u"label_11")
-
-        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.label_11)
-
-        self.checkBox_SNAP_WITH_CAPTION = QCheckBox(self.formLayoutWidget_2)
-        self.checkBox_SNAP_WITH_CAPTION.setObjectName(u"checkBox_SNAP_WITH_CAPTION")
-
-        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.checkBox_SNAP_WITH_CAPTION)
+        self.formLayout_2.setWidget(8, QFormLayout.FieldRole, self.spinBox_THREAD_RATE_LIMIT)
 
         self.groupBox_3 = QGroupBox(self.centralwidget)
         self.groupBox_3.setObjectName(u"groupBox_3")
@@ -235,7 +232,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 744, 22))
+        self.menubar.setGeometry(QRect(0, 0, 737, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -253,14 +250,17 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(statustip)
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"OpenAI API", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"APIBASE", None))
+        self.lineEdit_APIBASE.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Default is \"https://api.openai.com/v1\"", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"APIKEYS", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"PROXY", None))
+        self.lineEdit_PROXY.setPlaceholderText(QCoreApplication.translate("MainWindow", u"None", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"KEYWORD", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"MAXTOKEN", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"MODEL", None))
         self.comboBox_MODEL.setCurrentText("")
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"LANGUAGE", None))
         self.comboBox_LANGUAGE.setCurrentText("")
+        self.textEdit_APIKEYS.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Your APIKEYs, splitted in lines", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Generation", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"GEN_IMGS", None))
         self.checkBox_GEN_IMGS.setText("")
@@ -268,14 +268,14 @@ class Ui_MainWindow(object):
         self.checkBox_GEN_EQUATIONS.setText("")
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"USE_PDFFIGURE2", None))
         self.checkBox_USE_PDFFIGURE2.setText("")
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"SNAP_WITH_CAPTION", None))
+        self.checkBox_SNAP_WITH_CAPTION.setText("")
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"FAKE_GPT_RESPONSE", None))
         self.label_20.setText(QCoreApplication.translate("MainWindow", u"GPT_ENABLE", None))
         self.checkBox_GPT_ENABLE.setText("")
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"TEXT2LIST_MAX_NUM", None))
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"TEXT2TREE_MAX_NUM", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"THREAD_RATE_LIMIT", None))
-        self.label_11.setText(QCoreApplication.translate("MainWindow", u"SNAP_WITH_CAPTION", None))
-        self.checkBox_SNAP_WITH_CAPTION.setText("")
         self.groupBox_3.setTitle("")
         self.pushButton_SAVE_CONFIG.setText(QCoreApplication.translate("MainWindow", u"Save Config", None))
         self.pushButton_GENERATE.setText(QCoreApplication.translate("MainWindow", u"Generate", None))

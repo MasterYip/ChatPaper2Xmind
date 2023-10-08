@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>744</width>
-    <height>416</height>
+    <width>737</width>
+    <height>392</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -24,9 +24,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>351</width>
-      <height>331</height>
+      <height>341</height>
      </rect>
     </property>
     <property name="title">
@@ -50,7 +50,11 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit_APIBASE"/>
+       <widget class="QLineEdit" name="lineEdit_APIBASE">
+        <property name="placeholderText">
+         <string>Default is &quot;https://api.openai.com/v1&quot;</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
@@ -67,7 +71,11 @@
        </widget>
       </item>
       <item row="9" column="1">
-       <widget class="QLineEdit" name="lineEdit_PROXY"/>
+       <widget class="QLineEdit" name="lineEdit_PROXY">
+        <property name="placeholderText">
+         <string>None</string>
+        </property>
+       </widget>
       </item>
       <item row="8" column="0">
        <widget class="QLabel" name="label_6">
@@ -122,7 +130,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QTextEdit" name="textEdit_APIKEYS"/>
+       <widget class="QTextEdit" name="textEdit_APIKEYS">
+        <property name="placeholderText">
+         <string>Your APIKEYs, splitted in lines</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -131,9 +143,9 @@
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>20</y>
+      <y>10</y>
       <width>351</width>
-      <height>241</height>
+      <height>261</height>
      </rect>
     </property>
     <property name="title">
@@ -145,7 +157,7 @@
        <x>20</x>
        <y>30</y>
        <width>321</width>
-       <height>212</height>
+       <height>211</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
@@ -191,6 +203,20 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>SNAP_WITH_CAPTION</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="checkBox_SNAP_WITH_CAPTION">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_13">
         <property name="text">
@@ -215,55 +241,43 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
-       <layout class="QFormLayout" name="formLayout_3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>TEXT2LIST_MAX_NUM</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="spinBox_TEXT2LIST_MAX_NUM"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_22">
-          <property name="text">
-           <string>TEXT2TREE_MAX_NUM</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBox_TEXT2TREE_MAX_NUM"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_23">
-          <property name="text">
-           <string>THREAD_RATE_LIMIT</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="spinBox_THREAD_RATE_LIMIT">
-          <property name="maximum">
-           <number>999</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_11">
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_21">
         <property name="text">
-         <string>SNAP_WITH_CAPTION</string>
+         <string>TEXT2LIST_MAX_NUM</string>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="checkBox_SNAP_WITH_CAPTION">
+      <item row="6" column="1">
+       <widget class="QSpinBox" name="spinBox_TEXT2LIST_MAX_NUM"/>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_22">
         <property name="text">
-         <string/>
+         <string>TEXT2TREE_MAX_NUM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QSpinBox" name="spinBox_TEXT2TREE_MAX_NUM"/>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_23">
+        <property name="text">
+         <string>THREAD_RATE_LIMIT</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QSpinBox" name="spinBox_THREAD_RATE_LIMIT">
+        <property name="maximum">
+         <number>999</number>
         </property>
        </widget>
       </item>
@@ -315,7 +329,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>744</width>
+     <width>737</width>
      <height>22</height>
     </rect>
    </property>

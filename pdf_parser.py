@@ -220,7 +220,7 @@ class PDFPaperParser:
                     break
         return section_dict
 
-    def get_section_imagedict(self, verbose=False):
+    def get_section_imagedict(self, verbose=False, snap_with_caption=SNAP_WITH_CAPTION):
         """
         Get image dict of each section
 
@@ -298,7 +298,7 @@ class PDFFigure2PaperParser(PDFPaperParser):
         return self.PDFF2data.get('abstractText').get('text')
 
     @override
-    def get_section_imagedict(self, snapWithCap=SNAP_WITH_CAPTION, verbose=False):
+    def get_section_imagedict(self, snap_with_caption=SNAP_WITH_CAPTION, verbose=False):
         """
         Get image dict of each section
         :return: Dict of section titles with tuple item list
@@ -306,7 +306,7 @@ class PDFFigure2PaperParser(PDFPaperParser):
         """
         img_ls = []
         for d in self.PDFF2data['figures']:
-            if snapWithCap:
+            if snap_with_caption:
                 box = get_bounding_box([
                     (d['regionBoundary']['x1'], d['regionBoundary']['y1'],
                      d['regionBoundary']['x2'], d['regionBoundary']['y2']),

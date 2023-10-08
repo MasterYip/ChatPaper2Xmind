@@ -2,21 +2,19 @@
 Author: MasterYip 2205929492@qq.com
 Date: 2023-10-08 09:23:35
 LastEditors: MasterYip
-LastEditTime: 2023-10-08 12:37:24
+LastEditTime: 2023-10-08 15:10:14
 FilePath: \ChatPaper2Xmind\main_window.py
 Description: file content
 '''
 
-from calendar import c
 import os
 import sys
 import json
-import re
 from config import *
+from paper2xmind import pdf_batch_processing
 from user_interface_ui_pyqt5 import *
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, QMimeData
-from PyQt5.QtGui import QTextCursor, QColor, QGuiApplication, QImage, QFont
-from PyQt5.QtWidgets import QAction, QApplication, QMainWindow, QMessageBox, QWidget, QMenu, QLineEdit
+from PyQt5.QtCore import QThread, pyqtSignal, QRect
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
 
 # Directory Management
 try:
@@ -78,7 +76,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.th.signalForText.connect(self.onUpdateTerminal)
         # sys.stdout = self.th
         # sys.stderr = self.th
-
+        self.config = {}
+        self.comboBox_LANGUAGE.addItems(["English", "Chinese"])
+        self.comboBox_MODEL.addItems(["gpt-3.5-turbo"])
+        # Default config
         self.lineEdit_APIBASE.setText(APIBASE)
         self.textEdit_APIKEYS.setText("\n".join(APIKEYS))
         self.comboBox_LANGUAGE.setCurrentText(LANGUAGE)
@@ -86,7 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.spinBox_MAXTOKEN.setValue(MAXTOKEN)
         self.lineEdit_KEYWORD.setText(KEYWORD)
         self.lineEdit_PROXY.setText(PROXY)
-        
+
         self.checkBox_GEN_IMGS.setChecked(GEN_IMGS)
         self.checkBox_GEN_EQUATIONS.setChecked(GEN_EQUATIONS)
         self.checkBox_USE_PDFFIGURE2.setChecked(USE_PDFFIGURE2)
@@ -96,7 +97,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.spinBox_TEXT2LIST_MAX_NUM.setValue(TEXT2LIST_MAX_NUM)
         self.spinBox_TEXT2TREE_MAX_NUM.setValue(TEXT2TREE_MAX_NUM)
         self.spinBox_THREAD_RATE_LIMIT.setValue(THREAD_RATE_LIMIT)
-        
+
         self.load_config()
 
         # Path drag and drop
@@ -133,33 +134,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 config['TEXT2TREE_MAX_NUM'])
             self.spinBox_THREAD_RATE_LIMIT.setValue(
                 config['THREAD_RATE_LIMIT'])
+            self.config = config
+
+    def update_config(self):
+        self.config['APIBASE'] = self.lineEdit_APIBASE.text()
+        self.config['APIKEYS'] = self.textEdit_APIKEYS.toPlainText().splitlines()
+        self.config['LANGUAGE'] = self.comboBox_LANGUAGE.currentText()
+        self.config['MODEL'] = self.comboBox_MODEL.currentText()
+        self.config['MAXTOKEN'] = self.spinBox_MAXTOKEN.value()
+        self.config['KEYWORD'] = self.lineEdit_KEYWORD.text()
+        self.config['PROXY'] = self.lineEdit_PROXY.text()
+
+        self.config['GEN_IMGS'] = self.checkBox_GEN_IMGS.isChecked()
+        self.config['GEN_EQUATIONS'] = self.checkBox_GEN_EQUATIONS.isChecked()
+        self.config['USE_PDFFIGURE2'] = self.checkBox_USE_PDFFIGURE2.isChecked()
+        self.config['SNAP_WITH_CAPTION'] = self.checkBox_SNAP_WITH_CAPTION.isChecked()
+        self.config['FAKE_GPT_RESPONSE'] = self.lineEdit_FAKE_GPT_RESPONSE.text()
+        self.config['GPT_ENABLE'] = self.checkBox_GPT_ENABLE.isChecked()
+        self.config['TEXT2LIST_MAX_NUM'] = self.spinBox_TEXT2LIST_MAX_NUM.value()
+        self.config['TEXT2TREE_MAX_NUM'] = self.spinBox_TEXT2TREE_MAX_NUM.value()
+        self.config['THREAD_RATE_LIMIT'] = self.spinBox_THREAD_RATE_LIMIT.value()
 
     def save_config(self):
-        config = {}
-        config['APIBASE'] = self.lineEdit_APIBASE.text()
-        config['APIKEYS'] = self.textEdit_APIKEYS.toPlainText().splitlines()
-        config['LANGUAGE'] = self.comboBox_LANGUAGE.currentText()
-        config['MODEL'] = self.comboBox_MODEL.currentText()
-        config['MAXTOKEN'] = self.spinBox_MAXTOKEN.value()
-        config['KEYWORD'] = self.lineEdit_KEYWORD.text()
-        config['PROXY'] = self.lineEdit_PROXY.text()
-
-        config['GEN_IMGS'] = self.checkBox_GEN_IMGS.isChecked()
-        config['GEN_EQUATIONS'] = self.checkBox_GEN_EQUATIONS.isChecked()
-        config['USE_PDFFIGURE2'] = self.checkBox_USE_PDFFIGURE2.isChecked()
-        config['SNAP_WITH_CAPTION'] = self.checkBox_SNAP_WITH_CAPTION.isChecked()
-        config['FAKE_GPT_RESPONSE'] = self.lineEdit_FAKE_GPT_RESPONSE.text()
-        config['GPT_ENABLE'] = self.checkBox_GPT_ENABLE.isChecked()
-        config['TEXT2LIST_MAX_NUM'] = self.spinBox_TEXT2LIST_MAX_NUM.value()
-        config['TEXT2TREE_MAX_NUM'] = self.spinBox_TEXT2TREE_MAX_NUM.value()
-        config['THREAD_RATE_LIMIT'] = self.spinBox_THREAD_RATE_LIMIT.value()
-
+        self.update_config()
         with open(self.config_dir, 'w') as f:
-            json.dump(config, f, indent=4)
+            json.dump(self.config, f, indent=4)
 
     def generate_xmind(self):
-        self.save_config()
-        os.system("python paper2xmind.py --path \"" + self.lineEdit_PATH.text()+"\"")
+        self.update_config()
+        pdf_batch_processing(self.lineEdit_PATH.text(), usePDFFigure2=self.config['USE_PDFFIGURE2'],
+                             apibase=self.config['APIBASE'], apikeys=self.config['APIKEYS'],
+                             model=self.config['MODEL'], keyword=self.config['KEYWORD'],
+                             gpt_enable=self.config['GPT_ENABLE'], openai_proxy=self.config['PROXY'],
+                             rate_limit=self.config['THREAD_RATE_LIMIT'])
 
     # def onUpdateTerminal(self, text):
     #     self.textBrowser_Terminal.moveCursor(QTextCursor.End)
