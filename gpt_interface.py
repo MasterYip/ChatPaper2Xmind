@@ -3,7 +3,6 @@ import openai
 from threading import Thread
 import time
 from tqdm import trange
-from config import *
 import tiktoken
 
 
@@ -198,7 +197,11 @@ class GPTThread(object):
     def __init__(self, apikey, rate_limit=THREAD_RATE_LIMIT):
         self.apikey = apikey
         self.thread = None
-        self.cooling_time = 60 / rate_limit
+        # FIXME: Should not use global variable
+        if GPT_ENABLE:
+            self.cooling_time = 60 / rate_limit
+        else:
+            self.cooling_time = 0
         self.last_request_time = None
         self.thread = None
 

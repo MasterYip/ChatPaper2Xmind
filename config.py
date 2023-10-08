@@ -1,34 +1,34 @@
-"""OpenAI API"""
-APIBASE = ""                    # OpenAI API base, default is "https://api.openai.com/v1" for now (Leave it as empty if you are not sure)
-APIKEYS = [""]                  # Your OpenAI API keys
-MODEL = "gpt-3.5-turbo"         # GPT model name
-MAXTOKEN = 4096                 # Max token number for each request (Cutoff is performed when the number of tokens exceeds this value)
-LANGUAGE = "English"            # Only partially support Chinese
-KEYWORD = "Science&Engineering" # Keyword for GPT model (What field you want the model to focus on)
-PROXY = None                    # Your proxy address
-# Note: If you are in China, you may need to use a proxy to access OpenAI API
-# (If your system's global proxy is set, you can leave it as None)
-# PROXY = "http://127.0.0.1:7890"
+# """OpenAI API"""
+# APIBASE = ""                    # OpenAI API base, default is "https://api.openai.com/v1" for now (Leave it as empty if you are not sure)
+# APIKEYS = [""]                  # Your OpenAI API keys
+# MODEL = "gpt-3.5-turbo"         # GPT model name
+# MAXTOKEN = 4096                 # Max token number for each request (Cutoff is performed when the number of tokens exceeds this value)
+# LANGUAGE = "English"            # Only partially support Chinese
+# KEYWORD = "Science&Engineering" # Keyword for GPT model (What field you want the model to focus on)
+# PROXY = None                    # Your proxy address
+# # Note: If you are in China, you may need to use a proxy to access OpenAI API
+# # (If your system's global proxy is set, you can leave it as None)
+# # PROXY = "http://127.0.0.1:7890"
 
 
-"""Generation"""
-GEN_IMGS = True
-GEN_EQUATIONS = True
+# """Generation"""
+# GEN_IMGS = True
+# GEN_EQUATIONS = True
 
-# PDFFigure2
-USE_PDFFIGURE2 = True       # Use PDFFigure2 to generate images & tables (This requires you to install JVM)
-SNAP_WITH_CAPTION = True    # Generate images & tables with caption (Only valid when USE_PDFFIGURE2 is True)
+# # PDFFigure2
+# USE_PDFFIGURE2 = True       # Use PDFFigure2 to generate images & tables (This requires you to install JVM)
+# SNAP_WITH_CAPTION = True    # Generate images & tables with caption (Only valid when USE_PDFFIGURE2 is True)
 
-# Max generation item number
-TEXT2LIST_MAX_NUM = 4       # Max number of items for each list
-TEXT2TREE_MAX_NUM = 4       # Max number of subtopics for each topic
-FAKE_GPT_RESPONSE = "Fake"  # Fake GPT response when GPT_ENABLE is False
-if True:  # Use true GPT model
-    GPT_ENABLE = True
-    THREAD_RATE_LIMIT = 100       # Each APIKEY can send 3 requests per minute (limited by OpenAI)
-else:    # Use fake GPT model
-    GPT_ENABLE = False
-    THREAD_RATE_LIMIT = 6000  
+# # Max generation item number
+# TEXT2LIST_MAX_NUM = 4       # Max number of items for each list
+# TEXT2TREE_MAX_NUM = 4       # Max number of subtopics for each topic
+# FAKE_GPT_RESPONSE = "Fake"  # Fake GPT response when GPT_ENABLE is False
+# if True:  # Use true GPT model
+#     GPT_ENABLE = True
+#     THREAD_RATE_LIMIT = 100       # Each APIKEY can send 3 requests per minute (limited by OpenAI)
+# else:    # Use fake GPT model
+#     GPT_ENABLE = False
+#     THREAD_RATE_LIMIT = 6000  
 
 
 """PDF Parser - Regular Expression"""
@@ -51,3 +51,39 @@ TEMPLATE_XMIND_PATH = 'template.xmind'
 
 """Debuging"""
 DEBUG_MODE = False
+
+
+"""Settings Override (from config.json if exists)"""
+import json
+import os
+
+# Directory Management
+try:
+    # Run in Terminal
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+except:
+    # Run in ipykernel & interactive
+    ROOT_DIR = os.getcwd()
+config_dir = os.path.join(ROOT_DIR, "config.json")
+# if os.path.isfile(config_dir):
+with open(config_dir, 'r') as f:
+    config = json.load(f)
+APIBASE = config['APIBASE']
+APIKEYS = config['APIKEYS']
+MODEL = config['MODEL']
+MAXTOKEN = config['MAXTOKEN']
+LANGUAGE = config['LANGUAGE']
+KEYWORD = config['KEYWORD']
+PROXY = config['PROXY']
+
+GEN_IMGS = config['GEN_IMGS']
+GEN_EQUATIONS = config['GEN_EQUATIONS']
+USE_PDFFIGURE2 = config['USE_PDFFIGURE2']
+SNAP_WITH_CAPTION = config['SNAP_WITH_CAPTION']
+TEXT2LIST_MAX_NUM = config['TEXT2LIST_MAX_NUM']
+TEXT2TREE_MAX_NUM = config['TEXT2TREE_MAX_NUM']
+FAKE_GPT_RESPONSE = config['FAKE_GPT_RESPONSE']
+GPT_ENABLE = config['GPT_ENABLE']
+THREAD_RATE_LIMIT = config['THREAD_RATE_LIMIT']
+print(GPT_ENABLE)
+print(THREAD_RATE_LIMIT)
