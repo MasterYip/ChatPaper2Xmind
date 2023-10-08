@@ -131,8 +131,11 @@
       </item>
       <item row="1" column="1">
        <widget class="QTextEdit" name="textEdit_APIKEYS">
+        <property name="statusTip">
+         <string>Your APIKEYs splitted in lines</string>
+        </property>
         <property name="placeholderText">
-         <string>Your APIKEYs, splitted in lines</string>
+         <string>Should not be empty (No thread will be running)</string>
         </property>
        </widget>
       </item>

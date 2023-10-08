@@ -2,7 +2,7 @@
 Author: MasterYip 2205929492@qq.com
 Date: 2023-10-08 09:23:35
 LastEditors: MasterYip
-LastEditTime: 2023-10-08 17:07:16
+LastEditTime: 2023-10-08 17:33:32
 FilePath: \ChatPaper2Xmind\main_window.py
 Description: file content
 '''
@@ -11,11 +11,12 @@ import os
 import re
 import sys
 import json
+from threading import Thread
 from config import *
 from paper2xmind import pdf_batch_processing
 from user_interface_ui_pyqt5 import *
 from PyQt5.QtCore import QThread, pyqtSignal, QRect
-from PyQt5.QtGui import QTextCursor
+from PyQt5.QtGui import QTextCursor, QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
 
 # Directory Management
@@ -73,15 +74,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
-        # TODO: Redirecting stdout and stderr to MainWindow leads to non-responding
-        # self.th = OutputRedirectThread()
-        # self.th.signalForText.connect(self.onUpdateTerminal)
-        # sys.stdout = self.th
-        # sys.stderr = self.th
+        # Output Redirection
+        self.th = OutputRedirectThread()
+        self.th.signalForText.connect(self.onUpdateTerminal)
+        sys.stdout = self.th
+        sys.stderr = self.th
         self.config = {}
+
+        self.setWindowIcon(QIcon(os.path.join(ROOT_DIR, "icon.png")))
+
+        # Default config
         self.comboBox_LANGUAGE.addItems(["English", "Chinese"])
         self.comboBox_MODEL.addItems(["gpt-3.5-turbo"])
-        # Default config
+
         self.lineEdit_APIBASE.setText(APIBASE)
         self.textEdit_APIKEYS.setText("\n".join(APIKEYS))
         self.comboBox_LANGUAGE.setCurrentText(LANGUAGE)
@@ -164,31 +169,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def generate_xmind(self):
         self.update_config()
+        process_thread = Thread(target=self.generate_xmind_thread)
+        process_thread.start()
+
+    def generate_xmind_thread(self):
         pdf_batch_processing(self.lineEdit_PATH.text(), usePDFFigure2=self.config['USE_PDFFIGURE2'],
                              apibase=self.config['APIBASE'], apikeys=self.config['APIKEYS'],
                              model=self.config['MODEL'], keyword=self.config['KEYWORD'],
                              gpt_enable=self.config['GPT_ENABLE'], openai_proxy=self.config['PROXY'],
                              rate_limit=self.config['THREAD_RATE_LIMIT'])
 
-    # def onUpdateTerminal(self, text):
-    #     self.textBrowser_Terminal.moveCursor(QTextCursor.End)
-    #     text = re.sub(r'\033\[\d+m', '', text)
-    #     self.textBrowser_Terminal.insertPlainText(text)
-    #     # FIXME: Insert colored text
-    #     # for line in text.splitlines():
-    #     #     if line.startswith("\033[91m"):
-    #     #         self.textBrowser_Terminal.setTextColor(
-    #     #             QColor(self.textColors[0]))
-    #     #         self.textBrowser_Terminal.insertPlainText(line[5:])
-    #     #     elif line.startswith("\033[92m"):
-    #     #         self.textBrowser_Terminal.setTextColor(
-    #     #             QColor(self.textColors[1]))
-    #     #         self.textBrowser_Terminal.insertPlainText(line[5:])
-    #     #     else:
-    #     #         # self.textBrowser_Terminal.setTextColor(
-    #     #         #     QColor(self.textColors[2]))
-    #     #         self.textBrowser_Terminal.insertPlainText(line)
-    #     self.textBrowser_Terminal.moveCursor(QTextCursor.End)
+    def onUpdateTerminal(self, text):
+        self.textBrowser_Terminal.moveCursor(QTextCursor.End)
+        text = re.sub(r'\033\[\d+m', '', text)
+        self.textBrowser_Terminal.insertPlainText(text)
+        # FIXME: Insert colored text
+        # for line in text.splitlines():
+        #     if line.startswith("\033[91m"):
+        #         self.textBrowser_Terminal.setTextColor(
+        #             QColor(self.textColors[0]))
+        #         self.textBrowser_Terminal.insertPlainText(line[5:])
+        #     elif line.startswith("\033[92m"):
+        #         self.textBrowser_Terminal.setTextColor(
+        #             QColor(self.textColors[1]))
+        #         self.textBrowser_Terminal.insertPlainText(line[5:])
+        #     else:
+        #         # self.textBrowser_Terminal.setTextColor(
+        #         #     QColor(self.textColors[2]))
+        #         self.textBrowser_Terminal.insertPlainText(line)
+        self.textBrowser_Terminal.moveCursor(QTextCursor.End)
 
 
 if __name__ == '__main__':
