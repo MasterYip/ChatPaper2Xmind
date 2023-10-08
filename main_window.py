@@ -178,13 +178,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def generate_xmind(self):
         self.update_config()
+        # FIXME: if you quit the program, the thread will not stop
         self.process_thread = Thread(target=self.generate_xmind_thread)
         self.process_thread.start()
 
     def stop_thread(self):
         # if self.process_thread:
         #     self.process_thread
-            
+        pass
+
     def generate_xmind_thread(self):
         pdf_batch_processing(self.lineEdit_PATH.text(), usePDFFigure2=self.config['USE_PDFFIGURE2'],
                              apibase=self.config['APIBASE'], apikeys=self.config['APIKEYS'],
