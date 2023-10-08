@@ -2,7 +2,7 @@
 APIBASE = ""                    # OpenAI API base, default is "https://api.openai.com/v1" for now (Leave it as empty if you are not sure)
 APIKEYS = [""]                  # Your OpenAI API keys
 MODEL = "gpt-3.5-turbo"         # GPT model name
-MAXTOKEN = 4096                 # Max token number for each request (Cutoff is performed when the number of tokens exceeds this value)
+MAXTOKEN = 4000                 # Max token number for each request (Cutoff is performed when the number of tokens exceeds this value)
 LANGUAGE = "English"            # Only partially support Chinese
 KEYWORD = "Science&Engineering" # Keyword for GPT model (What field you want the model to focus on)
 PROXY = None                    # Your proxy address
@@ -28,7 +28,7 @@ if True:  # Use true GPT model
     THREAD_RATE_LIMIT = 100       # Each APIKEY can send 3 requests per minute (limited by OpenAI)
 else:    # Use fake GPT model
     GPT_ENABLE = False
-    THREAD_RATE_LIMIT = 6000  
+    THREAD_RATE_LIMIT = 6000
 
 
 """PDF Parser - Regular Expression"""
@@ -48,6 +48,7 @@ IMG_MATCHSTR = 'Fig.[\s]{1,3}[\d]{1,2}|Figure[\s]{1,3}[\d]{1,2}|Tab.[\s]{1,3}[\d
 
 """Xmind Sytle Template"""
 TEMPLATE_XMIND_PATH = 'template.xmind'
+
 
 """Debuging"""
 DEBUG_MODE = False

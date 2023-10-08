@@ -1,6 +1,7 @@
 *.py[cdi]
 private_config.py
-
+config.json
+/release
 ####
 PDFexample/*
 !PDFexample/2016_ANYmal - a highly mobile and dynamic quadrupedal robot.pdf

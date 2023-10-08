@@ -3,7 +3,6 @@ import openai
 from threading import Thread
 import time
 from tqdm import trange
-from config import *
 import tiktoken
 
 
@@ -19,7 +18,7 @@ def countTokens(string: str, encoding_name: str) -> int:
     return num_tokens
 
 
-def autoCutoff(string: str, encoding_name: str = MODEL, max_tokens: int = MAXTOKEN) -> str:
+def autoCutoff(string: str, encoding_name: str, max_tokens: int) -> str:
     """
     Automatically cut off a string to a maximum number of tokens, using the given encoding.
     :param string: The string to cut off.
@@ -34,7 +33,7 @@ def autoCutoff(string: str, encoding_name: str = MODEL, max_tokens: int = MAXTOK
     return string
 
 
-def messageAutoCutoff(message: list, encoding_name: str = MODEL, max_tokens: int = MAXTOKEN):
+def messageAutoCutoff(message: list, encoding_name: str, max_tokens: int):
     token_cnt = 0
     for item in message:
         token_cnt += countTokens(item['content'], encoding_name)
@@ -49,7 +48,8 @@ def messageAutoCutoff(message: list, encoding_name: str = MODEL, max_tokens: int
 
 class GPTRequest(object):
     # TODO: other model support?
-    def __init__(self, content, model=MODEL, language=LANGUAGE, keyword=KEYWORD):
+    def __init__(self, content, model=MODEL, language=LANGUAGE, keyword=KEYWORD, maxtoken=MAXTOKEN,
+                 gpt_enable=GPT_ENABLE, fake_response=FAKE_GPT_RESPONSE):
         """
         Initialize GPTRequest.\\
         Note that request message has not been generated yet.
@@ -63,6 +63,10 @@ class GPTRequest(object):
         self.content = content
         self.language = language
         self.keyword = keyword
+        self.maxtoken = maxtoken
+        self.gpt_enable = gpt_enable
+        self.fake_response = fake_response
+        
         self.ret = None
         self.success = False
         # TODO: Nontype problem?
@@ -166,12 +170,12 @@ class GPTRequest(object):
         FIXME: this sleep is not controlled by the GPTThread
         """
         completions = None
-        if GPT_ENABLE:
+        if self.gpt_enable:
             while completions is None:
                 try:
                     completions = openai.ChatCompletion.create(
                         model=self.model,
-                        messages=messageAutoCutoff(self.message),
+                        messages=messageAutoCutoff(self.message, self.model, self.maxtoken),
                     )
                 except Exception as e:
                     print(e)
@@ -185,7 +189,7 @@ class GPTRequest(object):
             self.ret = completions['choices'][0]['message']['content']
             self.postprocess()
         else:
-            self.ret = FAKE_GPT_RESPONSE
+            self.ret = self.fake_response
             self.postprocess()
         self.success = True
 
@@ -195,10 +199,14 @@ class GPTRequest(object):
 
 class GPTThread(object):
 
-    def __init__(self, apikey, rate_limit=THREAD_RATE_LIMIT):
+    def __init__(self, apikey, rate_limit, gpt_enable):
         self.apikey = apikey
         self.thread = None
-        self.cooling_time = 60 / rate_limit
+        # FIXME: Should not use global variable
+        if gpt_enable:
+            self.cooling_time = 60 / rate_limit
+        else:
+            self.cooling_time = 0
         self.last_request_time = None
         self.thread = None
 
@@ -223,8 +231,8 @@ class GPTThread(object):
 
 
 class GPTInterface(object):
-    def __init__(self, apibase=APIBASE, apikeys=APIKEYS, model=MODEL, keyword=KEYWORD,
-                 gpt_enable=GPT_ENABLE, openai_proxy=PROXY) -> None:
+    def __init__(self, apibase, apikeys, model, keyword,
+                 gpt_enable, openai_proxy, rate_limit) -> None:
         if openai_proxy:
             openai.proxy = openai_proxy
         if apibase:
@@ -234,7 +242,7 @@ class GPTInterface(object):
         self.keyword = keyword
         self.gpt_enable = gpt_enable
         self.request_list = []
-        self.thread_list = [GPTThread(apikey) for apikey in self.apikeys]
+        self.thread_list = [GPTThread(apikey, rate_limit, gpt_enable) for apikey in self.apikeys]
         self.request_index = {}
 
     def gptMultitask(self, interval=0):
