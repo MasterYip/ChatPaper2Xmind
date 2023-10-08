@@ -2,7 +2,7 @@
 Author: MasterYip 2205929492@qq.com
 Date: 2023-10-08 09:23:35
 LastEditors: MasterYip
-LastEditTime: 2023-10-08 19:26:03
+LastEditTime: 2023-10-08 20:15:34
 FilePath: \ChatPaper2Xmind\main_window.py
 Description: file content
 '''
@@ -193,6 +193,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                              model=self.config['MODEL'], keyword=self.config['KEYWORD'],
                              gpt_enable=self.config['GPT_ENABLE'], openai_proxy=self.config['PROXY'],
                              rate_limit=self.config['THREAD_RATE_LIMIT'])
+        # pdf_batch_processing(self.lineEdit_PATH.text())
 
     def onUpdateTerminal(self, text):
         self.textBrowser_Terminal.moveCursor(QTextCursor.End)
