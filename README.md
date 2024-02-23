@@ -198,3 +198,5 @@ GitHub：[Master Yip](https://github.com/MasterYip)
 
 QQ 交流群：
 ![QQ](doc/QQ.jpg)
+
+加群验证问题答案：Github
